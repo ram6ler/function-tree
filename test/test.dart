@@ -3,15 +3,13 @@
 
 import 'package:function_tree/function_tree.dart';
 import 'dart:io';
+import 'dart:math' show PI;
 
 main() {
   // one variable...
   {
-    FunctionTree ft = new FunctionTree(
-        fromExpression: "1.5 * sin(2 * (x - PI / 3)^2) + y",
-        withVariableNames: ["x", "y"]);
-
-    print(ft({"x": 1, "y": 2}));
+    var f = new FunctionOfX("1.5 * sin(2 * (x - PI / 3)) + 2");
+    print(f(PI));
   }
 
   // two variable...

@@ -7,9 +7,13 @@ A library for parsing and evaluating mathematical functions built from strings.
 A simple usage example:
 
     import 'package:function_tree/function_tree.dart';
+    import 'dart:math' show PI;
 
     main() {
-      FunctionTree ft = new FunctionTree(
+      var f = new FunctionOfX("1.5 * sin(2 * (x - PI / 3)) + 2");
+      print(f(PI));
+
+      var ft = new FunctionTree(
         fromExpression: "1.5 * sin(2 * (x - PI / 3)^2) + y",
         withVariableNames: ["x", "y"]);
 

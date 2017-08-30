@@ -43,3 +43,15 @@ class FunctionTree {
   @override
   String toString() => tree.toString();
 }
+
+class FunctionOfX {
+  FunctionOfX(String expression) {
+    tree = _createFunctionTree(
+        fromExpression: expression, withVariableNames: ["x"]);
+  }
+  _FunctionTree tree;
+
+  num call(num x) => tree([x]);
+
+  // TODO: numerical techniques
+}
