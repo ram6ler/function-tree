@@ -2,11 +2,11 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'package:function_tree/function_tree.dart';
+import 'dart:math' show PI;
 
-main() {
-  FunctionTree ft = new FunctionTree(
-      fromExpression: "1.5 * sin(2 * (x - PI / 3)^2) + y",
-      withVariableNames: ["x", "y"]);
+void main() {
+  var f = new FunctionTree(
+      fromExpression: "sin(a) + cos(2 * b)", withVariableNames: ["a", "b"]);
 
-  print(ft({"x": 1, "y": 2}));
+  print(f({"a": PI / 4, "b": PI / 3}));
 }

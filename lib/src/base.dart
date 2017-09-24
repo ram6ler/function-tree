@@ -3,17 +3,17 @@
 
 part of function_tree;
 
-// Base class.
+/// Base class.
 class _FunctionTree {
   _FunctionTree(this.variableNames);
 
-  // The symbols to be treated as variables.
+  /// The symbols to be treated as variables.
   List<String> variableNames;
 
-  // A TeX representation of the expression.
+  /// A TeX representation of the expression.
   String tex;
 
-  // The function wrapped by a tree node.
+  /// The function wrapped by a tree node.
   num Function(List<num>) f;
 
   num call(List<num> variables) => f(variables);

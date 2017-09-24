@@ -3,11 +3,12 @@
 
 part of function_tree;
 
-// Verbose tree construction.
+/// Verbose tree construction.
 final bool debug = false;
 
 // Definitions
 
+/// A mapping of string representations to functions.
 final Map<String, Function> _functionMap = {
   "acos": acos,
   "asin": asin,
@@ -30,6 +31,7 @@ final Map<String, Function> _functionMap = {
   "sqrt": sqrt
 };
 
+/// A mapping of string representations of functions to LaTeX.
 final Map<String, String> _functionLatexRepresentation = {
   "acos": r"\arccos\left(C\right) ",
   "asin": r"\arcsin\left(C\right) ",
@@ -52,6 +54,7 @@ final Map<String, String> _functionLatexRepresentation = {
   "sqrt": r"\sqrt{C} "
 };
 
+/// A mapping of string representations to constants.
 final Map<String, num> _constantMap = {
   "E": E,
   "PI": PI,
@@ -64,6 +67,7 @@ final Map<String, num> _constantMap = {
   "SQRT2": SQRT2
 };
 
+/// A mapping of string representations of constants to LaTeX.
 final Map<String, String> _constantLatexRepresentation = {
   "E": "e ",
   "PI": r"\pi ",

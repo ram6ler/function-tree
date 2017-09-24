@@ -3,7 +3,7 @@
 
 part of function_tree;
 
-// A tree node with a single child node.
+/// A tree node with a single child node.
 class _Branch extends _FunctionTree {
   _Branch(this.child, List<String> variableNames) : super(variableNames);
   _FunctionTree child;
@@ -13,6 +13,7 @@ class _Branch extends _FunctionTree {
 
 // Branches
 
+/// A branch node representing a function.
 class _FunctionBranch extends _Branch {
   _FunctionBranch(_FunctionTree child, Function composite,
       String latexRepresentation, List<String> variableNames)
@@ -22,6 +23,7 @@ class _FunctionBranch extends _Branch {
   }
 }
 
+/// A branch node representing a set of parentheses.
 class _ParenthesisBranch extends _Branch {
   _ParenthesisBranch(_FunctionTree child, List<String> variableNames)
       : super(child, variableNames) {
@@ -30,6 +32,7 @@ class _ParenthesisBranch extends _Branch {
   }
 }
 
+/// A branch node representing a negation.
 class _NegativeBranch extends _Branch {
   _NegativeBranch(_FunctionTree child, List<String> variableNames)
       : super(child, variableNames) {
@@ -38,6 +41,7 @@ class _NegativeBranch extends _Branch {
   }
 }
 
+/// A (redundant) branch node representing a positive.
 class _PositiveBranch extends _Branch {
   _PositiveBranch(_FunctionTree child, List<String> variableNames)
       : super(child, variableNames) {

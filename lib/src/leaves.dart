@@ -3,13 +3,14 @@
 
 part of function_tree;
 
-// A tree node representing a terminus point in the tree.
+/// A tree node representing a terminus point in the tree.
 class _Leaf extends _FunctionTree {
   _Leaf(List<String> variableNames) : super(variableNames);
 }
 
 // Leaves
 
+/// A leaf node representing a variable.
 class _VariableLeaf extends _Leaf {
   _VariableLeaf(String variable, List<String> variableNames)
       : super(variableNames) {
@@ -21,6 +22,7 @@ class _VariableLeaf extends _Leaf {
   String toString() => tex;
 }
 
+/// A leaf node representing a constant.
 class _ConstantLeaf extends _Leaf {
   _ConstantLeaf(num k, List<String> variableNames) : super(variableNames) {
     f = (_) => k;
@@ -30,6 +32,7 @@ class _ConstantLeaf extends _Leaf {
   String toString() => tex;
 }
 
+/// A leaf node representing a constant.
 class _SpecialConstantLeaf extends _Leaf {
   _SpecialConstantLeaf(
       num k, String latexRepresentation, List<String> variableNames)

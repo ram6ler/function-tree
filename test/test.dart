@@ -10,6 +10,7 @@ main() {
   {
     var f = new FunctionOfX("1.5 * sin(2 * (x - PI / 3)) + 2");
     print(f(PI));
+    print("TeX: ${f.tex}");
   }
 
   // two variable...
@@ -22,5 +23,6 @@ main() {
       }
       stdout.writeln();
     }
+    print("tex: ${ft.tex}");
   }
 }

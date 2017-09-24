@@ -3,7 +3,7 @@
 
 part of function_tree;
 
-// A tree node with two child nodes.
+/// A tree node with two child nodes.
 class _Fork extends _FunctionTree {
   _Fork(this.leftChild, this.rightChild, List<String> variableNames)
       : super(variableNames);
@@ -16,6 +16,7 @@ class _Fork extends _FunctionTree {
 
 // Forks
 
+/// A fork node representing a sum.
 class _SumFork extends _Fork {
   _SumFork(_FunctionTree leftChild, _FunctionTree rightChild,
       List<String> variableNames)
@@ -25,6 +26,7 @@ class _SumFork extends _Fork {
   }
 }
 
+/// A fork node representing a difference.
 class _DifferenceFork extends _Fork {
   _DifferenceFork(_FunctionTree leftChild, _FunctionTree rightChild,
       List<String> variableNames)
@@ -34,6 +36,7 @@ class _DifferenceFork extends _Fork {
   }
 }
 
+/// A fork node representing a product.
 class _ProductFork extends _Fork {
   _ProductFork(_FunctionTree leftChild, _FunctionTree rightChild,
       List<String> variableNames)
@@ -43,6 +46,7 @@ class _ProductFork extends _Fork {
   }
 }
 
+/// A fork node representing a quotient.
 class _QuotientFork extends _Fork {
   _QuotientFork(_FunctionTree leftChild, _FunctionTree rightChild,
       List<String> variableNames)
@@ -52,6 +56,7 @@ class _QuotientFork extends _Fork {
   }
 }
 
+/// A fork node representing a power.
 class _PowerFork extends _Fork {
   _PowerFork(_FunctionTree leftChild, _FunctionTree rightChild,
       List<String> variableNames)
