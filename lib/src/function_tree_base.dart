@@ -66,5 +66,59 @@ class FunctionOfX {
 
   num call(num x) => tree([x]);
 
-  // TODO: numerical techniques
+  /// Provides an estimate of the derivative at [x].
+  ///
+  /// Example:
+  ///
+  ///     var f = new FunctionOfX("x^2");
+  ///     num d = f.nDerivative(3);
+  ///
+  num nDerivative(num x, {num delta: 1e-9}) =>
+      (this(x + delta / 2) - this(x - delta / 2)) / delta;
+
+  /// Tries to provide as estimate of the zero near [guess].
+  ///
+  /// Uses Newton's method for iteratively improving the initial
+  /// approximation of the zero.
+  ///
+  /// Example:
+  ///
+  ///     var f = new FunctionOfX("x^2 - 2");
+  ///     num x0 = f.nZero(1);
+  ///
+  num nZero(num guess, {num epsilon: 1e-9}) {
+    int maxIterations = 100, iteration = 1;
+    num error = this(guess).abs();
+    while (error > epsilon && iteration < maxIterations) {
+      iteration++;
+      num y = this(guess);
+      guess -= y / this.nDerivative(guess);
+      error = y.abs();
+    }
+    if (iteration == maxIterations)
+      return double.NAN;
+    else
+      return guess;
+  }
+
+  /// Provides an estimate of the definite integral.
+  ///
+  /// Returns an estimate of the definite integral bound
+  /// by [a] and [b], using Simpson's method.
+  ///
+  /// Example:
+  ///
+  ///     var f = new FunctionOfX("x^2");
+  ///     num i = f.nIntegral(0, 1);
+  ///
+  num nIntegral(num a, num b, {int n}) {
+    n = n ?? 100;
+    num delta = (b - a) / n;
+    num sum1 = 0.0, sum2 = 0.0;
+    for (num x = a + delta; x < b; x += delta) {
+      if (x < b - delta) sum1 += this(x);
+      sum2 += this(x - delta / 2);
+    }
+    return delta / 3 * (this(a) + this(b) + sum1 + 2 * sum2);
+  }
 }
