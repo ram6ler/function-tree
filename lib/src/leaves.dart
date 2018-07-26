@@ -1,45 +1,36 @@
-// Copyright (c) 2017, Richard Ambler. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
-
 part of function_tree;
 
-/// A tree node representing a terminus point in the tree.
-class _Leaf extends _FunctionTree {
-  _Leaf(List<String> variableNames) : super(variableNames);
+class _ConstantLeaf extends _Node {
+  _ConstantLeaf(this.value) {}
+  num value;
+
+  @override
+  num call(_) => value;
+
+  @override
+  toLaTeX() => "$value ";
 }
 
-// Leaves
-
-/// A leaf node representing a variable.
-class _VariableLeaf extends _Leaf {
-  _VariableLeaf(String variable, List<String> variableNames)
-      : super(variableNames) {
-    //f = _identity;
-    f = (variables) => variables[variableNames.indexOf(variable)];
-    tex = "$variable ";
+class _SpecialConstantLeaf extends _Node {
+  _SpecialConstantLeaf(this.symbol) {
+    value = _constantMap[symbol];
   }
+  String symbol;
+  num value;
+
   @override
-  String toString() => tex;
+  num call(_) => value;
+
+  @override
+  toLaTeX() => _constantLatexRepresentation[symbol];
 }
 
-/// A leaf node representing a constant.
-class _ConstantLeaf extends _Leaf {
-  _ConstantLeaf(num k, List<String> variableNames) : super(variableNames) {
-    f = (_) => k;
-    tex = "$k ";
-  }
+class _VariableLeaf extends _Node {
+  _VariableLeaf(this.symbol);
+  String symbol;
   @override
-  String toString() => tex;
-}
+  num call(_) => _[symbol];
 
-/// A leaf node representing a constant.
-class _SpecialConstantLeaf extends _Leaf {
-  _SpecialConstantLeaf(
-      num k, String latexRepresentation, List<String> variableNames)
-      : super(variableNames) {
-    f = (_) => k;
-    tex = "$latexRepresentation ";
-  }
   @override
-  String toString() => tex;
+  String toLaTeX() => "$symbol ";
 }

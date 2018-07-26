@@ -1,28 +1,33 @@
 // Copyright (c) 2017, Richard Ambler. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+import 'dart:math' show pi;
+
 import 'package:function_tree/function_tree.dart';
-import 'package:test/test.dart';
-import 'dart:math';
 
-void main() {
-  group('A group of tests', () {
-    FunctionTree ft;
-    num Function(num) f;
-    setUp(() {
-      ft = new FunctionTree(
-          fromExpression: "1.5 * sin(2 * (x - PI / 3)) + 1",
-          withVariableNames: ["x"]);
-      f = (x) => 1.5 * sin(2 * (x - PI / 3)) + 1;
-    });
+main() {
+  {
+    var g = FunctionOfX("sin(2 * (pi * x))");
+    print(g(-3));
+  }
 
-    test('First Test', () {
-      List<num> xs = new List<num>.generate(10, (i) => 1 / 10),
-          f1 = xs.map(f).toList(),
-          f2 = xs.map((x) => ft({"x": x})).toList();
-      for (int i = 0; i < f1.length; i++) {
-        expect(f1[i] == f2[i], isTrue);
+  // one variable...
+  {
+    var f = FunctionOfX("1.5 * sin(2 * (x - PI / 3)) + 2");
+    print(f(pi));
+    print("TeX: ${f.tex}");
+  }
+
+  // two variable...
+  {
+    var ft = FunctionTree(fromExpression: "x + y^2 / 2", withVariableNames: ["x", "y"]);
+    for (int y = 0; y < 5; y++) {
+      for (int x = 0; x < 5; x++) {
+        stdout.write("${ft({"x": x, "y": y})}\t");
       }
-    });
-  });
+      stdout.writeln();
+    }
+    print("tex: ${ft.tex}");
+  }
 }

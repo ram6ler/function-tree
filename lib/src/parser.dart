@@ -1,207 +1,156 @@
-// Copyright (c) 2017, Richard Ambler. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
-
 part of function_tree;
 
-// Helpers
-
-/// Returns the closing parenthesis of the openining parenthesis at [start].
-int _parenthesisEnd(String expression, int start) =>
-    new RegExp(r"\([^\)]*\)").allMatches(expression, start).first.end - 1;
-
-/// Returns the expression with the parentheses symbol replaced with
-/// the appropriate contents.
-String _replaceFromParenthesesList(String expression, List<String> list) {
-  final indexPattern = new RegExp(r"\[[0-9]+\]");
-  Match match;
-  while ((match = indexPattern.firstMatch(expression)) != null) {
-    int index = int.parse(expression.substring(match.start + 1, match.end - 1));
-    String from = expression.substring(match.start, match.end);
-    expression = expression.replaceFirst(from, list[index]);
+int _indexOfClosingParenthesis(String expression, [int start = 0]) {
+  int level = 0;
+  for (int i = start; i < expression.length; i++) {
+    if (expression[i] == "(")
+      level++;
+    else if (expression[i] == ")") {
+      level--;
+      if (level == 0) return i;
+    }
   }
-  return expression;
+  return -1;
 }
 
-_FunctionTree _createFunctionTree(
-    {String fromExpression, List<String> withVariableNames}) {
-  var specialConstants = new List<String>();
-  // Parser helper;
-  _FunctionTree createTree(String expression) {
-    // is the entire expression in parenthesis?
-    {
-      if (expression[0] == "(") {
-        int end = _parenthesisEnd(expression, 0);
-        if (end == expression.length - 1) {
-          String childExpression = expression.substring(1, end);
-          if (debug) print("<parenthesis>: '$childExpression");
-          return new _ParenthesisBranch(
-              createTree(childExpression), withVariableNames);
-        }
-      }
-    }
-
-    // is the expression of the form FUN(...)?
-    {
-      final functionPattern = new RegExp(r"^[a-z]+\(");
-      Match match = functionPattern.firstMatch(expression);
-      if (match != null) {
-        int start = expression.indexOf("("),
-            end = _parenthesisEnd(expression, start);
-        if (end == expression.length - 1) {
-          String functionKey = expression.substring(0, start),
-              functionArgument = expression.substring(start + 1, end);
-          if (debug) print("<function: $functionKey>: '$functionArgument'");
-          return new _FunctionBranch(
-              createTree(functionArgument),
-              _functionMap[functionKey],
-              _functionLatexRepresentation[functionKey],
-              withVariableNames);
-        }
-      }
-    }
-
-    var expressionList = new List<String>();
-    int expressionIndex = 0;
-
-    // Are there any parentheses?
-    if (expression.contains("(")) {
-      int i;
-      for (i = expression.indexOf("("); i < expression.length; i++) {
-        if (expression[i] == "(") {
-          int j = _parenthesisEnd(expression, i);
-          String expressionItem = expression.substring(i, j + 1);
-          expressionList.add(expressionItem);
-          expression =
-              expression.replaceFirst(expressionItem, "[$expressionIndex]");
-          expressionIndex++;
-
-          if (!expression.contains("("))
-            break;
-          else {
-            i = expression.indexOf("(") - 1;
-          }
-        }
-      }
-    }
-
-    _FunctionTree createFork(String operatorCharacter,
-        _FunctionTree Function(_FunctionTree, _FunctionTree) forkChoice) {
-      int i = expression.indexOf(operatorCharacter);
-      String leftExpression = _replaceFromParenthesesList(
-              expression.substring(0, i), expressionList),
-          rightExpression = _replaceFromParenthesesList(
-              expression.substring(i + 1), expressionList);
-      if (debug)
-        print("'$leftExpression' <:$operatorCharacter:> '$rightExpression'");
-      return forkChoice(
-          createTree(leftExpression), createTree(rightExpression));
-    }
-
-    // Check for sums.
-    if (expression.contains("+"))
-      return createFork(
-          "+",
-          (leftChild, rightChild) =>
-              new _SumFork(leftChild, rightChild, withVariableNames));
-
-    // Check for differences.
-    if (expression.contains("-"))
-      return createFork(
-          "-",
-          (leftChild, rightChild) =>
-              new _DifferenceFork(leftChild, rightChild, withVariableNames));
-
-    // Check for products.
-    if (expression.contains("*"))
-      return createFork(
-          "*",
-          (leftChild, rightChild) =>
-              new _ProductFork(leftChild, rightChild, withVariableNames));
-
-    // Check for quotients.
-    if (expression.contains("/"))
-      return createFork(
-          "/",
-          (leftChild, rightChild) =>
-              new _QuotientFork(leftChild, rightChild, withVariableNames));
-
-    // Check for powers.
-    if (expression.contains("^"))
-      return createFork(
-          "^",
-          (leftChild, rightChild) =>
-              new _PowerFork(leftChild, rightChild, withVariableNames));
-
-    // Check for variables.
-    if (withVariableNames.contains(expression)) {
-      int variableIndex = withVariableNames.indexOf(expression);
-      if (debug) print("<variable:> '${withVariableNames[variableIndex]}'");
-      return new _VariableLeaf(expression, withVariableNames);
-    }
-
-    _FunctionTree createBranch(
-        _FunctionTree Function(_FunctionTree) branchChoice) {
-      String childExpression =
-          _replaceFromParenthesesList(expression.substring(1), expressionList);
-      return branchChoice(createTree(childExpression));
-    }
-
-    // Check for negative.
-    if (expression[0] == "~") {
-      if (debug) print("<negative:> '${expression.substring(1)}'");
-      return createBranch(
-          (child) => new _NegativeBranch(child, withVariableNames));
-    }
-
-    // Check for positive.
-    if (expression[0] == "#") {
-      if (debug) print("<positive:> '${expression.substring(1)}'");
-      return createBranch(
-          (child) => new _PositiveBranch(child, withVariableNames));
-    }
-
-    // Check for special constant.
-    if (expression[0] == "<") {
-      int constantIndex =
-          int.parse(expression.substring(1, expression.length - 1));
-      String constantKey = specialConstants[constantIndex];
-      if (debug) print("<constant-special:> $constantIndex $constantKey");
-      return new _SpecialConstantLeaf(_constantMap[constantKey],
-          _constantLatexRepresentation[constantKey], withVariableNames);
-    }
-
-    // Assume numeric constant.
-    if (debug) print("<constant:> $expression");
-    return new _ConstantLeaf(num.parse(expression), withVariableNames);
+bool _parenthesesAreBalanced(String expression) {
+  int level = 0;
+  for (int i = 0; i < expression.length; i++) {
+    if (expression[i] == "(")
+      level++;
+    else if (expression[i] == ")") level--;
   }
 
-  // TODO: clean expression (check only allowed characters etc.)
-  int constantIndex = 0;
-  _constantMap.keys.forEach((String key) {
-    while (fromExpression.contains(key)) {
-      fromExpression = fromExpression.replaceFirst(key, "<$constantIndex>");
-      specialConstants.add(key);
-      constantIndex++;
-    }
-  });
+  return level == 0;
+}
 
-  // Remove spaces.
-  fromExpression = fromExpression.replaceAll(" ", "");
+_Node _parseString(String expression, List<String> variables) {
+  // Terminations...
+  if (verboseTreeConstruction) print("Parsing '$expression'...");
 
-  // Identify unary + and -.
-  String replaceIndex(int i, String symbol) =>
-      "${fromExpression.substring(0, i)}$symbol${fromExpression.substring(i + 1)}";
-  for (int i = 0; i < fromExpression.length; i++) {
-    if (fromExpression[i] == "-") {
-      if (i == 0 || fromExpression[i - 1] == "(")
-        fromExpression = replaceIndex(i, "~");
-    } else if (fromExpression[i] == "+") {
-      if (i == 0 || fromExpression[i - 1] == "(")
-        fromExpression = replaceIndex(i, "#");
+  // Check if numerical constant.
+  {
+    num x = num.tryParse(expression);
+    if (x != null) {
+      if (verboseTreeConstruction) print("Constant Leaf: '$expression'");
+      return _ConstantLeaf(x);
     }
   }
-  if (debug) print("Parsing: '$fromExpression'");
 
-  // Parse expression.
-  return createTree(fromExpression);
+  // Check if a special constant.
+  {
+    if (_constantMap.keys.any((key) => key == expression)) {
+      if (verboseTreeConstruction) print("Special Constant Leaf: '$expression'");
+      return _SpecialConstantLeaf(expression);
+    }
+  }
+
+  // Check if a variable.
+  {
+    for (var variable in variables) {
+      if (variable == expression) {
+        if (verboseTreeConstruction) print("Variable Leaf: '$expression'");
+        return _VariableLeaf(variable);
+      }
+    }
+  }
+
+  // Recursives...
+
+  // Check if unary -.
+  if (expression[0] == "-") {
+    if (verboseTreeConstruction) print("Negative Branch: '$expression'");
+    return _NegativeBranch(_parseString(expression.substring(1), variables));
+  }
+
+  // Check if unary +.
+  if (expression[0] == "+") {
+    if (verboseTreeConstruction) print("Positive Branch: '$expression'");
+    return _PositiveBranch(_parseString(expression.substring(1), variables));
+  }
+
+  // Check if parentheses.
+  if (expression[0] == "(") {
+    int end = _indexOfClosingParenthesis(expression);
+    if (end == expression.length - 1) {
+      if (verboseTreeConstruction) print("Parentheses: '$expression'");
+      return _ParenthesisBranch(_parseString(expression.substring(1, end), variables));
+    }
+  }
+
+  // Check if a function.
+  for (var key in _functionMap.keys) {
+    int argumentIndex = key.length;
+    if (expression.length >= argumentIndex && expression.substring(0, argumentIndex) == key) {
+      if (expression[argumentIndex] == "(") {
+        int end = _indexOfClosingParenthesis(expression, argumentIndex);
+        if (end == expression.length - 1) {
+          if (verboseTreeConstruction) print("Function Branch: '$expression'");
+          return _FunctionBranch(key, _parseString(expression.substring(argumentIndex), variables));
+        }
+      }
+    }
+  }
+
+  // Helper for binary operations.
+  List<String> leftRight(String operation) {
+    if (expression.contains(operation)) {
+      var split = expression.split(operation);
+      for (int i = 1; i < split.length; i++) {
+        var left = split.sublist(0, i).join(operation), right = split.sublist(i).join(operation);
+        if (_parenthesesAreBalanced(left) && _parenthesesAreBalanced(right)) {
+          return [left, right];
+        }
+      }
+      return null;
+    } else
+      return null;
+  }
+
+  // Check if +.
+  {
+    var lr = leftRight("+");
+    if (lr != null) {
+      if (verboseTreeConstruction) print("Sum Fork: '$expression'");
+      return _SumFork(_parseString(lr[0], variables), _parseString(lr[1], variables));
+    }
+  }
+
+  // Check if -.
+  {
+    var lr = leftRight("-");
+    if (lr != null) {
+      if (verboseTreeConstruction) print("Difference Fork: '$expression'");
+      return _DifferenceFork(_parseString(lr[0], variables), _parseString(lr[1], variables));
+    }
+  }
+
+  // Check if *.
+  {
+    var lr = leftRight("*");
+    if (lr != null) {
+      if (verboseTreeConstruction) print("Product Fork: '$expression'");
+      return _ProductFork(_parseString(lr[0], variables), _parseString(lr[1], variables));
+    }
+  }
+
+  // Check if /.
+  {
+    var lr = leftRight("/");
+    if (lr != null) {
+      if (verboseTreeConstruction) print("Quotient Fork: '$expression'");
+      return _QuotientFork(_parseString(lr[0], variables), _parseString(lr[1], variables));
+    }
+  }
+
+  // Check if ^.
+  {
+    var lr = leftRight("^");
+    if (lr != null) {
+      if (verboseTreeConstruction) print("Power Fork: '$expression'");
+      return _PowerFork(_parseString(lr[0], variables), _parseString(lr[1], variables));
+    }
+  }
+
+  throw Exception("Bad expression: '$expression'...");
 }
