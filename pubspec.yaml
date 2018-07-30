@@ -1,9 +1,9 @@
 name: function_tree
 description: A library for parsing and evaluating numerical functions built from strings.
-version: 0.2.0
+version: 0.2.1
 homepage: https://bitbucket.org/ram6ler/function-tree/wiki/Home
 author: Richard Ambler <rambler@ibwya.net>
 
 environment:
-  sdk: '>=2.0.0-dev.68.0 <2.0.0'
+  sdk: '>=2.0.0-dev.68.0 <3.0.0'
 

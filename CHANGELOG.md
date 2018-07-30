@@ -1,5 +1,9 @@
 # Change log
 
+## 0.2.1
+
+- Marked as ready for Dart 2.
+
 ## 0.2.0
 
 - Re-wrote the parsing engine: code much cleaner and easier to read.
