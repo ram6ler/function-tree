@@ -27,9 +27,9 @@ class FunctionTree {
 
   String get tex => tree.toLaTeX();
 
-  num call(Map<String, num> vs) =>
-      tree(Map<String, num>.fromIterable(vs.keys.where((key) => _variablesToMap.contains(key)),
-          value: (key) => vs[key]));
+  num call(Map<String, num> vs) => tree(Map<String, num>.fromIterable(
+      vs.keys.where((key) => _variablesToMap.contains(key)),
+      value: (key) => vs[key]));
 
   @override
   String toString() => tree.toString();
@@ -61,7 +61,8 @@ class FunctionOfX {
   ///     var f = FunctionOfX("x^2");
   ///     num d = f.nDerivative(3);
   ///
-  num nDerivative(num x, {num delta: 1e-9}) => (this(x + delta / 2) - this(x - delta / 2)) / delta;
+  num nDerivative(num x, {num delta: 1e-9}) =>
+      (this(x + delta / 2) - this(x - delta / 2)) / delta;
 
   /// Tries to provide an estimate of the zero near [guess].
   ///

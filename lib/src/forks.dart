@@ -43,8 +43,9 @@ class _ProductFork extends _Fork {
   num call(_) => left(_) * right(_);
 
   @override
-  String toLaTeX() =>
-      r"L \cdot R ".replaceAll("L", left.toLaTeX()).replaceAll("R", right.toLaTeX());
+  String toLaTeX() => r"L \cdot R "
+      .replaceAll("L", left.toLaTeX())
+      .replaceAll("R", right.toLaTeX());
 }
 
 class _QuotientFork extends _Fork {
@@ -58,8 +59,9 @@ class _QuotientFork extends _Fork {
   num call(_) => left(_) / right(_);
 
   @override
-  String toLaTeX() =>
-      r"\frac{L}{R} ".replaceAll("L", left.toLaTeX()).replaceAll("R", right.toLaTeX());
+  String toLaTeX() => r"\frac{L}{R} "
+      .replaceAll("L", left.toLaTeX())
+      .replaceAll("R", right.toLaTeX());
 }
 
 class _PowerFork extends _Fork {
@@ -73,5 +75,7 @@ class _PowerFork extends _Fork {
   num call(_) => pow(left(_), right(_));
 
   @override
-  String toLaTeX() => r"L^{R} ".replaceAll("L", left.toLaTeX()).replaceAll("R", right.toLaTeX());
+  String toLaTeX() => r"L^{R} "
+      .replaceAll("L", left.toLaTeX())
+      .replaceAll("R", right.toLaTeX());
 }

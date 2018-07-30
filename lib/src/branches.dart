@@ -16,7 +16,8 @@ class _FunctionBranch extends _Branch {
   num call(_) => function(child(_));
 
   @override
-  String toLaTeX() => _functionLatexRepresentation[symbol].replaceAll("C", child.toLaTeX());
+  String toLaTeX() =>
+      _functionLatexRepresentation[symbol].replaceAll("C", child.toLaTeX());
 }
 
 class _ParenthesisBranch extends _Branch {
