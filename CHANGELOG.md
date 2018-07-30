@@ -3,6 +3,7 @@
 ## 0.2.1
 
 - Marked as ready for Dart 2.
+- dartfmt-ed some of the files.
 
 ## 0.2.0
 
