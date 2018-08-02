@@ -1,7 +1,7 @@
 part of function_tree;
 
 String _cleanExpression(String expression) {
-  return expression.replaceAll(RegExp(r"[^0-9a-zA-Z_.+\-/*^()]"), "");
+  return expression.replaceAll(RegExp(r"[^0-9a-zA-Z_.+\-/*%^()]"), "");
 }
 
 /// A callable class built from a string representation of a

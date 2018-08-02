@@ -64,6 +64,22 @@ class _QuotientFork extends _Fork {
       .replaceAll("R", right.toLaTeX());
 }
 
+class _RemainderFork extends _Fork {
+  _RemainderFork(_Node left, _Node right) {
+    this
+      ..left = left
+      ..right = right;
+  }
+
+  @override
+  num call(_) => left(_) % right(_);
+
+  @override
+  String toLaTeX() => r"{L} \bmod {R} "
+      .replaceAll("L", left.toLaTeX())
+      .replaceAll("R", right.toLaTeX());
+}
+
 class _PowerFork extends _Fork {
   _PowerFork(_Node left, _Node right) {
     this

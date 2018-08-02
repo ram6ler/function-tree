@@ -96,8 +96,8 @@ _Node _parseString(String expression, List<String> variables) {
     }
   }
 
-  // Helper for binary operations.
-  List<String> leftRight(String operation) {
+  // Helper for binary operations implementations.
+  List<String> _leftRight(String operation) {
     if (expression.contains(operation)) {
       var split = expression.split(operation);
       for (int i = 1; i < split.length; i++) {
@@ -112,55 +112,107 @@ _Node _parseString(String expression, List<String> variables) {
       return null;
   }
 
+  // Helper for binary operation definitions.
+  _Node _binaryOperationCheck(String character, String nodeName,
+      _Node Function(_Node left, _Node right) generator) {
+    var lr = _leftRight(character);
+    if (lr == null) return null;
+
+    if (verboseTreeConstruction) print("$nodeName: '$expression'");
+
+    return generator(
+        _parseString(lr[0], variables), _parseString(lr[1], variables));
+  }
+
   // Check if +.
   {
-    var lr = leftRight("+");
+    var sumCheck = _binaryOperationCheck(
+        "+", "Sum Fork", (left, right) => _SumFork(left, right));
+    if (sumCheck != null) return sumCheck;
+  }
+  /*{
+    var lr = _leftRight("+");
     if (lr != null) {
       if (verboseTreeConstruction) print("Sum Fork: '$expression'");
       return _SumFork(
           _parseString(lr[0], variables), _parseString(lr[1], variables));
     }
-  }
+  }*/
 
   // Check if -.
   {
-    var lr = leftRight("-");
+    var diffCheck = _binaryOperationCheck(
+        "-", "Difference Fork", (left, right) => _DifferenceFork(left, right));
+    if (diffCheck != null) return diffCheck;
+  }
+  /*{
+    var lr = _leftRight("-");
     if (lr != null) {
       if (verboseTreeConstruction) print("Difference Fork: '$expression'");
       return _DifferenceFork(
           _parseString(lr[0], variables), _parseString(lr[1], variables));
     }
-  }
+  }*/
 
   // Check if *.
   {
-    var lr = leftRight("*");
+    var productCheck = _binaryOperationCheck(
+        "*", "Product Fork", (left, right) => _ProductFork(left, right));
+    if (productCheck != null) return productCheck;
+  }
+  /*{
+    var lr = _leftRight("*");
     if (lr != null) {
       if (verboseTreeConstruction) print("Product Fork: '$expression'");
       return _ProductFork(
           _parseString(lr[0], variables), _parseString(lr[1], variables));
     }
-  }
+  }*/
 
   // Check if /.
   {
-    var lr = leftRight("/");
+    var quotientCheck = _binaryOperationCheck(
+        "/", "Quotient Fork", (left, right) => _QuotientFork(left, right));
+    if (quotientCheck != null) return quotientCheck;
+  }
+  /*{
+    var lr = _leftRight("/");
     if (lr != null) {
       if (verboseTreeConstruction) print("Quotient Fork: '$expression'");
       return _QuotientFork(
           _parseString(lr[0], variables), _parseString(lr[1], variables));
     }
+  }*/
+
+  // Check if %.
+  {
+    var remainderCheck = _binaryOperationCheck(
+        "%", "Remainder Fork", (left, right) => _RemainderFork(left, right));
+    if (remainderCheck != null) return remainderCheck;
   }
+  /*{
+    var lr = _leftRight("%");
+    if (lr != null) {
+      if (verboseTreeConstruction) print("Quotient Fork: '$expression'");
+      return _RemainderFork(
+          _parseString(lr[0], variables), _parseString(lr[1], variables));
+    }
+  }*/
 
   // Check if ^.
   {
-    var lr = leftRight("^");
+    var powerCheck = _binaryOperationCheck(
+        "^", "Power Fork", (left, right) => _PowerFork(left, right));
+    if (powerCheck != null) return powerCheck;
+  }
+  /*{
+    var lr = _leftRight("^");
     if (lr != null) {
       if (verboseTreeConstruction) print("Power Fork: '$expression'");
       return _PowerFork(
           _parseString(lr[0], variables), _parseString(lr[1], variables));
     }
-  }
+  }*/
 
   throw Exception("Bad expression: '$expression'...");
 }

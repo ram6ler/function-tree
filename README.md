@@ -1,6 +1,6 @@
 # function_tree
 
-A library for parsing and evaluating mathematical functions built from strings.
+A library for parsing and evaluating numerical functions built from strings.
 
 ## Usage
 

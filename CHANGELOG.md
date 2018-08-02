@@ -1,9 +1,12 @@
 # Change log
 
-## 0.2.1
+## 0.2.5
 
 - Marked as ready for Dart 2.
 - dartfmt-ed some of the files.
+- Added support for the `%` operator.
+- Added support for `floor`, `ceil` and `round`.
+- Added come timing comparisons between evaluating native Dart functions, function tree instances and repeated string parsing in `test/`.
 
 ## 0.2.0
 
@@ -17,6 +20,7 @@
 - Basic numerical differentiation.
 - Basic numerical integration (Simpson).
 - Basic zero-finding (Newton).
+- Very much proof of concept.
 
 ## 0.1.0
 

@@ -1,30 +1,43 @@
-import 'dart:io';
-import 'dart:math' show pi;
-
+import 'dart:math';
 import 'package:function_tree/function_tree.dart';
 
-main() {
-  {
-    var g = FunctionOfX("sin(2 * (pi * x))");
-    print(g(-3));
-  }
+void main() {
+  print("\nLet's compare the evaluation speed of a native Dart function to");
+  print("that of an equivalent function tree instance...\n");
 
-  // one variable...
-  {
-    var f = FunctionOfX("1.5 * sin(2 * (x - PI / 3)) + 2");
-    print(f(pi));
-    print("TeX: ${f.tex}");
-  }
+  num Function(num) f =
+      (num x) => 3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6));
 
-  // two variable...
-  {
-    var ft = FunctionTree(fromExpression: "x + y^2 / 2", withVariableNames: ["x", "y"]);
-    for (int y = 0; y < 5; y++) {
-      for (int x = 0; x < 5; x++) {
-        stdout.write("${ft({"x": x, "y": y})}\t");
-      }
-      stdout.writeln();
-    }
-    print("tex: ${ft.tex}");
-  }
+  var string = "3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6))",
+      g = FunctionOfX(string);
+
+  print("The function under consideration is:\n");
+  print("   3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6))\n");
+
+  var stopwatch = Stopwatch();
+
+  stopwatch.start();
+  for (int i = 0; i < 1e5; i++) f(5);
+  stopwatch.stop();
+  print(
+      "100 000 calls to native function f: ${stopwatch.elapsedMilliseconds} µs.\n");
+
+  stopwatch
+    ..reset()
+    ..start();
+  for (int i = 0; i < 1e5; i++) g(5);
+  stopwatch.stop();
+  print(
+      "100 000 calls to function tree g, built from the string: ${stopwatch.elapsedMilliseconds} µs.\n");
+
+  print("Of course, tree construction itself takes time...\n");
+
+  stopwatch
+    ..reset()
+    ..start();
+  for (int i = 0; i < 1e5; i++)
+    FunctionOfX("3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6))")(5);
+  stopwatch.stop();
+  print(
+      "100 000 calls to construct and evaluate tree (equivalent to parsing the string each call): ${stopwatch.elapsedMilliseconds} µs.\n");
 }
