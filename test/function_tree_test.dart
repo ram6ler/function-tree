@@ -11,8 +11,7 @@ void main() {
   var string = "3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6))",
       g = FunctionOfX(string);
 
-  print("The function under consideration is:\n");
-  print("   3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6))\n");
+  print("The function under consideration is:\n   $string\n");
 
   var stopwatch = Stopwatch();
 
@@ -35,8 +34,7 @@ void main() {
   stopwatch
     ..reset()
     ..start();
-  for (int i = 0; i < 1e5; i++)
-    FunctionOfX("3 * exp(5 * x) + 2 * sin(5 * (3 * x + pi / 6))")(5);
+  for (int i = 0; i < 1e5; i++) FunctionOfX(string)(5);
   stopwatch.stop();
   print(
       "100 000 calls to construct and evaluate tree (equivalent to parsing the string each call): ${stopwatch.elapsedMilliseconds} µs.\n");
