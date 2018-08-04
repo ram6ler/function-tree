@@ -1,5 +1,9 @@
 # Change log
 
+## 0.2.6
+
+Fixed ambiguity issue: if the user chooses a variable name in an expression that happens to be a special constant name (such as 'e'), the parser will take occurrences in the expression to mean that the variable. 
+
 ## 0.2.5
 
 - Marked as ready for Dart 2.

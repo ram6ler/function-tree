@@ -39,7 +39,9 @@ _Node _parseString(String expression, List<String> variables) {
 
   // Check if a special constant.
   {
-    if (_constantMap.keys.any((key) => key == expression)) {
+    // Allow user to override special constants.
+    if (_constantMap.keys
+        .any((key) => key == expression && !variables.contains(expression))) {
       if (verboseTreeConstruction)
         print("Special Constant Leaf: '$expression'");
       return _SpecialConstantLeaf(expression);
