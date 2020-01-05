@@ -7,7 +7,7 @@ String _cleanExpression(String expression) {
 String _cleanTeX(String expression) {
   final patternStart = r'\left( \left(', patternEnd = r'\right) \right)';
   while (expression.contains(patternStart)) {
-    int start = expression.indexOf(patternStart),
+    final start = expression.indexOf(patternStart),
         end = _indexOfClosingParenthesis(
             expression, start, patternStart, patternEnd);
     expression = expression
@@ -35,6 +35,7 @@ class MultiVariableFunction extends FunctionTree {
 
   _Node tree;
 
+  @override
   String get tex => _cleanTeX(tree.toTeX());
 
   num call(Map<String, num> vs) => tree(Map<String, num>.fromIterable(
@@ -55,6 +56,8 @@ class SingleVariableFunction extends FunctionTree {
   }
   _Node tree;
   String _variable;
+
+  @override
   String get tex => _cleanTeX(tree.toTeX());
 
   num call(num x) => tree({_variable: x});

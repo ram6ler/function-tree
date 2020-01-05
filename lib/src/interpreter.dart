@@ -105,8 +105,9 @@ _Node _parseString(String expression, List<String> variables) {
         }
       }
       return null;
-    } else
+    } else {
       return null;
+    }
   }
 
   // Helper for binary operation definition.

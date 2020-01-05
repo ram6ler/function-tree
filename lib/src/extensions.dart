@@ -26,5 +26,5 @@ extension StringMethods on String {
   /// Example:
   ///
   ///     print('2 * pi'.interpret()); // 6.283185307179586
-  num interpret() => this.toSingleVariableFunction()(0);
+  num interpret() => toSingleVariableFunction()(0);
 }

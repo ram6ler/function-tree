@@ -1,14 +1,14 @@
 part of function_tree;
 
 class _ConstantLeaf extends _Node {
-  _ConstantLeaf(this.value) {}
+  _ConstantLeaf(this.value);
   num value;
 
   @override
-  num call(Map<String, num> _)  => value;
+  num call(Map<String, num> _) => value;
 
   @override
-  toTeX() => '$value ';
+  String toTeX() => '$value ';
 }
 
 class _SpecialConstantLeaf extends _Node {
@@ -19,17 +19,17 @@ class _SpecialConstantLeaf extends _Node {
   num value;
 
   @override
-  num call(Map<String, num> _)  => value;
+  num call(Map<String, num> _) => value;
 
   @override
-  toTeX() => _constantLatexRepresentation[symbol];
+  String toTeX() => _constantLatexRepresentation[symbol];
 }
 
 class _VariableLeaf extends _Node {
   _VariableLeaf(this.symbol);
   String symbol;
   @override
-  num call(Map<String, num> variables)  => variables[symbol];
+  num call(Map<String, num> variables) => variables[symbol];
 
   @override
   String toTeX() => '$symbol ';
