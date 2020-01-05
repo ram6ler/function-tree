@@ -13,11 +13,11 @@ class _FunctionBranch extends _Branch {
   num Function(num) function;
 
   @override
-  num call(_) => function(child(_));
+  num call(Map<String, num> variables) => function(child(variables));
 
   @override
-  String toLaTeX() =>
-      _functionLatexRepresentation[symbol].replaceAll("C", child.toLaTeX());
+  String toTeX() =>
+      _functionLatexRepresentation[symbol].replaceAll('C', child.toTeX());
 }
 
 class _ParenthesisBranch extends _Branch {
@@ -26,10 +26,10 @@ class _ParenthesisBranch extends _Branch {
   }
 
   @override
-  num call(_) => child(_);
+  num call(Map<String, num> variables) => child(variables);
 
   @override
-  String toLaTeX() => r"\left(C\right)".replaceAll("C", child.toLaTeX());
+  String toTeX() => r'\left(C\right)'.replaceAll('C', child.toTeX());
 }
 
 class _NegativeBranch extends _Branch {
@@ -38,10 +38,10 @@ class _NegativeBranch extends _Branch {
   }
 
   @override
-  num call(_) => -child(_);
+  num call(Map<String, num> variables) => -child(variables);
 
   @override
-  String toLaTeX() => "-${child.toLaTeX()}";
+  String toTeX() => '-${child.toTeX()}';
 }
 
 class _PositiveBranch extends _Branch {
@@ -50,8 +50,8 @@ class _PositiveBranch extends _Branch {
   }
 
   @override
-  num call(_) => child(_);
+  num call(Map<String, num> variables) => child(variables);
 
   @override
-  String toLaTeX() => "+${child.toLaTeX()}";
+  String toTeX() => '+${child.toTeX()}';
 }

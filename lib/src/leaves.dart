@@ -5,10 +5,10 @@ class _ConstantLeaf extends _Node {
   num value;
 
   @override
-  num call(_) => value;
+  num call(Map<String, num> _)  => value;
 
   @override
-  toLaTeX() => "$value ";
+  toTeX() => '$value ';
 }
 
 class _SpecialConstantLeaf extends _Node {
@@ -19,18 +19,18 @@ class _SpecialConstantLeaf extends _Node {
   num value;
 
   @override
-  num call(_) => value;
+  num call(Map<String, num> _)  => value;
 
   @override
-  toLaTeX() => _constantLatexRepresentation[symbol];
+  toTeX() => _constantLatexRepresentation[symbol];
 }
 
 class _VariableLeaf extends _Node {
   _VariableLeaf(this.symbol);
   String symbol;
   @override
-  num call(_) => _[symbol];
+  num call(Map<String, num> variables)  => variables[symbol];
 
   @override
-  String toLaTeX() => "$symbol ";
+  String toTeX() => '$symbol ';
 }

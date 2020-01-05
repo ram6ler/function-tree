@@ -8,5 +8,6 @@ part 'src/base.dart';
 part 'src/leaves.dart';
 part 'src/branches.dart';
 part 'src/forks.dart';
-part 'src/parser.dart';
+part 'src/interpreter.dart';
 part 'src/trees.dart';
+part 'src/extensions.dart';

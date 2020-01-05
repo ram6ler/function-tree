@@ -12,10 +12,10 @@ class _SumFork extends _Fork {
   }
 
   @override
-  num call(_) => left(_) + right(_);
+  num call(Map<String, num> variables) => left(variables) + right(variables);
 
   @override
-  String toLaTeX() => "${left.toLaTeX()} + ${right.toLaTeX()} ";
+  String toTeX() => '${left.toTeX()} + ${right.toTeX()} ';
 }
 
 class _DifferenceFork extends _Fork {
@@ -26,10 +26,10 @@ class _DifferenceFork extends _Fork {
   }
 
   @override
-  num call(_) => left(_) - right(_);
+  num call(Map<String, num> variables) => left(variables) - right(variables);
 
   @override
-  String toLaTeX() => "${left.toLaTeX()} - ${right.toLaTeX()} ";
+  String toTeX() => '${left.toTeX()} - ${right.toTeX()} ';
 }
 
 class _ProductFork extends _Fork {
@@ -40,12 +40,12 @@ class _ProductFork extends _Fork {
   }
 
   @override
-  num call(_) => left(_) * right(_);
+  num call(Map<String, num> variables) => left(variables) * right(variables);
 
   @override
-  String toLaTeX() => r"L \cdot R "
-      .replaceAll("L", left.toLaTeX())
-      .replaceAll("R", right.toLaTeX());
+  String toTeX() => r'L \cdot R'
+      .replaceFirst('L', left.toTeX())
+      .replaceFirst('R', right.toTeX());
 }
 
 class _QuotientFork extends _Fork {
@@ -56,12 +56,12 @@ class _QuotientFork extends _Fork {
   }
 
   @override
-  num call(_) => left(_) / right(_);
+  num call(Map<String, num> variables) => left(variables) / right(variables);
 
   @override
-  String toLaTeX() => r"\frac{L}{R} "
-      .replaceAll("L", left.toLaTeX())
-      .replaceAll("R", right.toLaTeX());
+  String toTeX() => r'\frac{L}{R} '
+      .replaceFirst('L', left.toTeX())
+      .replaceFirst('R', right.toTeX());
 }
 
 class _RemainderFork extends _Fork {
@@ -72,12 +72,12 @@ class _RemainderFork extends _Fork {
   }
 
   @override
-  num call(_) => left(_) % right(_);
+  num call(Map<String, num> variables) => left(variables) % right(variables);
 
   @override
-  String toLaTeX() => r"{L} \bmod {R} "
-      .replaceAll("L", left.toLaTeX())
-      .replaceAll("R", right.toLaTeX());
+  String toTeX() => r'{L} \bmod {R} '
+      .replaceFirst('L', left.toTeX())
+      .replaceFirst('R', right.toTeX());
 }
 
 class _PowerFork extends _Fork {
@@ -88,10 +88,11 @@ class _PowerFork extends _Fork {
   }
 
   @override
-  num call(_) => pow(left(_), right(_));
+  num call(Map<String, num> variables) =>
+      pow(left(variables), right(variables));
 
   @override
-  String toLaTeX() => r"L^{R} "
-      .replaceAll("L", left.toLaTeX())
-      .replaceAll("R", right.toLaTeX());
+  String toTeX() => r'L^{R} '
+      .replaceFirst('L', left.toTeX())
+      .replaceFirst('R', right.toTeX());
 }
