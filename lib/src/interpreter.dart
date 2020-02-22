@@ -44,8 +44,8 @@ _Node _parseString(String expression, List<String> variables) {
   // Check if a special constant.
   {
     // Allow user to override special constants.
-    if (_constantMap.keys
-        .any((key) => key == expression && !variables.contains(expression))) {
+    if (_constantMap.containsKey(expression) &&
+        !variables.contains(expression)) {
       return _SpecialConstantLeaf(expression);
     }
   }

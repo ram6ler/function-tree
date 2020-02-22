@@ -12,25 +12,25 @@ class _ConstantLeaf extends _Node {
 }
 
 class _SpecialConstantLeaf extends _Node {
-  _SpecialConstantLeaf(this.symbol) {
-    value = _constantMap[symbol];
+  _SpecialConstantLeaf(this.constant) {
+    value = _constantMap[constant];
   }
-  String symbol;
+  String constant;
   num value;
 
   @override
   num call(Map<String, num> _) => value;
 
   @override
-  String toTeX() => _constantLatexRepresentation[symbol];
+  String toTeX() => _constantLatexRepresentation[constant];
 }
 
 class _VariableLeaf extends _Node {
-  _VariableLeaf(this.symbol);
-  String symbol;
+  _VariableLeaf(this.variable);
+  String variable;
   @override
-  num call(Map<String, num> variables) => variables[symbol];
+  num call(Map<String, num> variables) => variables[variable];
 
   @override
-  String toTeX() => '$symbol ';
+  String toTeX() => '$variable ';
 }
