@@ -1,5 +1,9 @@
 # Change log
 
+## 0.6.0
+
+- Important bug fix: differences
+
 ## 0.5.0
 
 - Dusted out some cobwebs.
