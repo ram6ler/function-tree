@@ -1,5 +1,12 @@
 part of function_tree;
 
+final _debug = false;
+void _message(String message) {
+  if (_debug) {
+    print(message);
+  }
+}
+
 /// Returns the index of the closure of the parenthesis opening at `start`.
 int _indexOfClosingParenthesis(String expression,
     [int start = 0, String open = '(', String close = ')']) {
@@ -33,10 +40,13 @@ bool _parenthesesAreBalanced(String expression) {
 }
 
 _Node _parseString(String expression, List<String> variables) {
+  _message('Parsing "$expression"');
+
   // Check if numerical constant.
   {
     final x = num.tryParse(expression);
     if (x != null) {
+      _message('  ...Constant Leaf: $expression');
       return _ConstantLeaf(x);
     }
   }
@@ -46,6 +56,7 @@ _Node _parseString(String expression, List<String> variables) {
     // Allow user to override special constants.
     if (_constantMap.containsKey(expression) &&
         !variables.contains(expression)) {
+      _message('  ... Special Constant Leaf: $expression');
       return _SpecialConstantLeaf(expression);
     }
   }
@@ -54,6 +65,7 @@ _Node _parseString(String expression, List<String> variables) {
   {
     for (final variable in variables) {
       if (variable == expression) {
+        _message('  ...Variable Leaf: $expression');
         return _VariableLeaf(variable);
       }
     }
@@ -61,11 +73,13 @@ _Node _parseString(String expression, List<String> variables) {
 
   // Check if unary -.
   if (expression[0] == '-') {
+    _message('  ...Negative Branch -: $expression');
     return _NegativeBranch(_parseString(expression.substring(1), variables));
   }
 
   // Check if unary +.
   if (expression[0] == '+') {
+    _message('  ...Positive Branch +: $expression');
     return _PositiveBranch(_parseString(expression.substring(1), variables));
   }
 
@@ -73,6 +87,7 @@ _Node _parseString(String expression, List<String> variables) {
   if (expression[0] == '(') {
     final end = _indexOfClosingParenthesis(expression);
     if (end == expression.length - 1) {
+      _message('  ...Parenthesis Branch: $expression');
       return _ParenthesisBranch(
           _parseString(expression.substring(1, end), variables));
     }
@@ -86,6 +101,7 @@ _Node _parseString(String expression, List<String> variables) {
       if (expression[argumentIndex] == '(') {
         final end = _indexOfClosingParenthesis(expression, argumentIndex);
         if (end == expression.length - 1) {
+          _message('  ...Function Branch: $expression');
           return _FunctionBranch(key,
               _parseString(expression.substring(argumentIndex), variables));
         }
@@ -97,13 +113,14 @@ _Node _parseString(String expression, List<String> variables) {
   List<String> _leftRight(String operation) {
     if (expression.contains(operation)) {
       final split = expression.split(operation);
-      for (var i = 1; i < split.length; i++) {
+      for (var i = split.length - 1; i > 0; i--) {
         final left = split.sublist(0, i).join(operation),
             right = split.sublist(i).join(operation);
         if (_parenthesesAreBalanced(left) && _parenthesesAreBalanced(right)) {
           return [left, right];
         }
       }
+
       return null;
     } else {
       return null;
@@ -113,11 +130,15 @@ _Node _parseString(String expression, List<String> variables) {
   // Helper for binary operation definition.
   _Node _binaryOperationCheck(String character, String nodeName,
       _Node Function(_Node left, _Node right) generator) {
-    final lr = _leftRight(character);
-    if (lr == null) return null;
+    final leftRight = _leftRight(character);
+    if (leftRight == null) {
+      return null;
+    }
 
-    return generator(
-        _parseString(lr[0], variables), _parseString(lr[1], variables));
+    _message(
+        '  ...$nodeName: $expression; left: ${leftRight.first}, right:${leftRight.last}');
+    return generator(_parseString(leftRight[0], variables),
+        _parseString(leftRight[1], variables));
   }
 
   // Check if +.

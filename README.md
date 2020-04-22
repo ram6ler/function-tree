@@ -9,7 +9,6 @@ At the simplest (and least efficient) level, we can
 `interpret` strings as mathematical
 expressions.
 
-
 ## Example:
 
 ```dart
@@ -18,14 +17,13 @@ expressions.
    '(3 + 2)^3',
    '3 * pi / 4',
    '3 * sin(5 * pi / 6)',
-   'e^(-1)'
+   'e^(-1)',
+   '2+2-2-2'
  ];
  for (final expression in expressions) {
    print("'$expression' -> ${expression.interpret()}");
  }
 ```
-
-## Output:
 
 ```text
 '2 + 2' -> 4
@@ -33,6 +31,7 @@ expressions.
 '3 * pi / 4' -> 2.356194490192345
 '3 * sin(5 * pi / 6)' -> 1.5000000000000009
 'e^(-1)' -> 0.36787944117144233
+'2+2-2-2' -> 0
 ```
 
 ## Function Trees
@@ -49,7 +48,6 @@ instance or by calling the `toSingleVariableFunction`
 string extension directly on a string, as in the following
 example:
 
-
 ## Example:
 
 ```dart
@@ -59,8 +57,6 @@ example:
    print('|' + ' ' * f(x).round() + '*');
  }
 ```
-
-## Output:
 
 ```text
 |                    *
@@ -112,7 +108,6 @@ instance or call the `toMultiVariableFunction` string extension
 to create a multi-variable functional tree, as in
 the following example.
 
-
 ## Example:
 
 ```dart
@@ -127,8 +122,6 @@ the following example.
  }
 ```
 
-## Output:
-
 ```text
 1	2	3	4	5	
 2	4	6	8	10	
@@ -142,7 +135,6 @@ the following example.
 Function tree instances have a `tex` property for
 TeX expressions.
 
-
 ## Example:
 
 ```dart
@@ -150,12 +142,9 @@ TeX expressions.
  print(f.tex);
 ```
 
-## Output:
-
 ```text
-x \cdot \cos\left( y \right) + y \cdot \sin\left( x \right) 
+x \cdot \cos\left( y \right) + y \cdot \sin\left( x \right)
 ```
-
 
 ## Interpreter
 
