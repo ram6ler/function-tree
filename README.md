@@ -173,5 +173,5 @@ log10e  sqrt1_2 sqrt2
 
 ## Thanks!
 
-Thanks for your interest in this library. Please file any bugs or requests [here](https://bitbucket.org/ram6ler/function-tree/issues).
+Thanks for your interest in this library. Please file any bugs or requests [here](https://github.com/ram6ler/function-tree/issues).
 
