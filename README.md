@@ -13,12 +13,11 @@ expressions.
 
 ```dart
  final expressions = [
-   '2 + 2',
+   '2 + 2 - 2 - 2',
    '(3 + 2)^3',
    '3 * pi / 4',
    '3 * sin(5 * pi / 6)',
-   'e^(-1)',
-   '2+2-2-2'
+   'e^(-1)'
  ];
  for (final expression in expressions) {
    print("'$expression' -> ${expression.interpret()}");
@@ -26,12 +25,11 @@ expressions.
 ```
 
 ```text
-'2 + 2' -> 4
+'2 + 2 - 2 - 2' -> 0
 '(3 + 2)^3' -> 125
 '3 * pi / 4' -> 2.356194490192345
 '3 * sin(5 * pi / 6)' -> 1.5000000000000009
 'e^(-1)' -> 0.36787944117144233
-'2+2-2-2' -> 0
 ```
 
 ## Function Trees
