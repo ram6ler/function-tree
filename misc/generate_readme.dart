@@ -88,12 +88,20 @@ Future<void> main() async {
   ///
   /// ### Functions
   ///
+  /// #### One-parameter functions
+  ///
   /// ```
   /// abs     acos    asin    atan    ceil
   /// cos     cosh    cot     coth    csc
   /// csch    exp     floor   ln      log
   /// round   sec     sech    sin     sinh
   /// sqrt    tan     tanh
+  /// ```
+  ///
+  /// #### Two-parameter functions
+  ///
+  /// ```
+  /// log     nrt     pow
   /// ```
   ///
   /// ### Constants
@@ -111,7 +119,7 @@ Future<void> main() async {
   ///
   /// ## Thanks!
   ///
-  /// Thanks for your interest in this library. Please file any bugs or requests [here].
+  /// Thanks for your interest in this library. Please file any bugs or requests [here](https://github.com/ram6ler/function-tree/issues).
   ///
   /// [END]
 
