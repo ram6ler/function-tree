@@ -1,5 +1,9 @@
 # Change log
 
+## 0.7.0
+
+- Added functionality for two-parameter functions, `log`, `nrt` and `pow` in response to a feature request.
+
 ## 0.6.0
 
 - Important bug fix: differences

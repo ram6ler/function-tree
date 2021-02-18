@@ -96,3 +96,22 @@ class _PowerFork extends _Fork {
       .replaceFirst('L', left.toTeX())
       .replaceFirst('R', right.toTeX());
 }
+
+class _TwoParameterFunctionFork extends _Fork {
+  _TwoParameterFunctionFork(this.symbol, _Node left, _Node right) {
+    this
+      ..left = left
+      ..right = right;
+  }
+
+  String symbol;
+
+  @override
+  num call(Map<String, num> variables) =>
+      _twoParameterFunctionMap[symbol](left(variables), right(variables));
+
+  @override
+  String toTeX() => _twoParameterFunctionLatexRepresentation[symbol]
+      .replaceAll('C1', left.toTeX())
+      .replaceAll('C2', right.toTeX());
+}

@@ -1,6 +1,6 @@
 part of function_tree;
 
-final _debug = false;
+final _debug = true;
 void _message(String message) {
   if (_debug) {
     print(message);
@@ -37,6 +37,21 @@ bool _parenthesesAreBalanced(String expression) {
     }
   }
   return level == 0;
+}
+
+int _numberOfCommas(String expression) {
+  if (expression.isEmpty) {
+    return 0;
+  }
+
+  int index = expression.indexOf(',');
+  if (index == -1) {
+    return 0;
+  }
+  if (index == expression.length - 1) {
+    return 1;
+  }
+  return 1 + _numberOfCommas(expression.substring(index + 1));
 }
 
 _Node _parseString(String expression, List<String> variables) {
@@ -93,8 +108,29 @@ _Node _parseString(String expression, List<String> variables) {
     }
   }
 
-  // Check if a function.
-  for (final key in _functionMap.keys) {
+  // Check if a two-parameter function.
+  for (final key in _twoParameterFunctionMap.keys) {
+    final argumentIndex = key.length;
+    if (expression.length >= argumentIndex &&
+        expression.substring(0, argumentIndex) == key &&
+        _numberOfCommas(expression) == 1) {
+      final commaIndex = expression.indexOf(','),
+          end = _indexOfClosingParenthesis(expression, argumentIndex),
+          firstArgument = expression.substring(argumentIndex + 1, commaIndex),
+          secondArgument =
+              expression.substring(commaIndex + 1, expression.length - 1);
+      if (end == expression.length - 1) {
+        _message('  ...Two Parameter Function Fork: $expression');
+        return _TwoParameterFunctionFork(
+            key,
+            _parseString(firstArgument, variables),
+            _parseString(secondArgument, variables));
+      }
+    }
+  }
+
+  // Check if a single-parameter function.
+  for (final key in _oneParameterFunctionMap.keys) {
     final argumentIndex = key.length;
     if (expression.length >= argumentIndex &&
         expression.substring(0, argumentIndex) == key) {

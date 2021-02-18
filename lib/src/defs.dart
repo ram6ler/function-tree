@@ -1,7 +1,21 @@
 part of function_tree;
 
+/// A mapping of string representations to two-parameter functions.
+final Map<String, num Function(num, num)> _twoParameterFunctionMap = {
+  'log': (num b, num x) => log(x) / log(b),
+  'nrt': (num n, num x) => pow(x, 1 / n),
+  'pow': (num x, num p) => pow(x, p)
+};
+
+/// A mapping of string representations of functions to LaTeX.
+final Map<String, String> _twoParameterFunctionLatexRepresentation = {
+  'log': r'\log_{C1}\left(C2\right)',
+  'nrt': r'\sqrt[C1]{C2}',
+  'pow': r'{C1}^{C2}'
+};
+
 /// A mapping of string representations to functions.
-final Map<String, Function> _functionMap = {
+final Map<String, num Function(num)> _oneParameterFunctionMap = {
   'abs': (num x) => x.abs(),
   'acos': acos,
   'asin': asin,
@@ -28,7 +42,7 @@ final Map<String, Function> _functionMap = {
 };
 
 /// A mapping of string representations of functions to LaTeX.
-final Map<String, String> _functionLatexRepresentation = {
+final Map<String, String> _oneParameterFunctionLatexRepresentation = {
   'abs': r'\left| C \right| ',
   'acos': r'\arccos\left( C \right) ',
   'asin': r'\arcsin\left( C \right) ',

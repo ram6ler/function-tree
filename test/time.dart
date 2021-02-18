@@ -17,7 +17,7 @@ void main() {
   print('Please wait...\n');
 
   stopwatch.start();
-  for (int i = 0; i < 1e5; i++) {
+  for (var i = 0; i < 1e5; i++) {
     f(5);
   }
   ;
@@ -27,7 +27,7 @@ void main() {
   stopwatch
     ..reset()
     ..start();
-  for (int i = 0; i < 1e5; i++) {
+  for (var i = 0; i < 1e5; i++) {
     g(5);
   }
   ;
@@ -37,7 +37,7 @@ void main() {
   stopwatch
     ..reset()
     ..start();
-  for (int i = 0; i < 1e5; i++) {
+  for (var i = 0; i < 1e5; i++) {
     SingleVariableFunction(fromExpression: expression)(5);
   }
   stopwatch.stop();

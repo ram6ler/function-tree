@@ -7,17 +7,16 @@ abstract class _Branch extends _Node {
 class _FunctionBranch extends _Branch {
   _FunctionBranch(this.symbol, _Node child) {
     this.child = child;
-    function = _functionMap[symbol];
   }
   String symbol;
-  num Function(num) function;
 
   @override
-  num call(Map<String, num> variables) => function(child(variables));
+  num call(Map<String, num> variables) =>
+      _oneParameterFunctionMap[symbol](child(variables));
 
   @override
   String toTeX() =>
-      _functionLatexRepresentation[symbol].replaceAll('C', child.toTeX());
+      _oneParameterFunctionLatexRepresentation[symbol].replaceAll('C', child.toTeX());
 }
 
 class _ParenthesisBranch extends _Branch {
