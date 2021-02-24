@@ -1,6 +1,6 @@
 # Change log
 
-## 0.8.0
+## 0.8.0-dev.1
 
 - Added null safety!
 - String interpolation appears even slower than before, but the generated function trees are still pretty efficient (once generated, within an order of magnitude of native Dart math library functions).
