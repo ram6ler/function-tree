@@ -1,5 +1,10 @@
 # Change log
 
+## 0.8.0
+
+- Added null safety!
+- String interpolation appears even slower than before, but the generated function trees are still pretty efficient (once generated, within an order of magnitude of native Dart math library functions).
+
 ## 0.7.0
 
 - Added functionality for two-parameter functions, `log`, `nrt` and `pow` in response to a feature request.

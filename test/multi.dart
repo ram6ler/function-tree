@@ -12,7 +12,11 @@ void main() {
               ? '▓'
               : (result > 2
                   ? '▒'
-                  : (result > 1.5 ? '░' : result > 0.5 ? '·' : ' ')));
+                  : (result > 1.5
+                      ? '░'
+                      : result > 0.5
+                          ? '·'
+                          : ' ')));
   print(List<String>.generate(
       width,
       (y) => List<String>.generate(

@@ -1,7 +1,7 @@
 part of function_tree;
 
 abstract class _Fork extends _Node {
-  _Node left, right;
+  late _Node left, right;
 }
 
 class _SumFork extends _Fork {
@@ -108,10 +108,10 @@ class _TwoParameterFunctionFork extends _Fork {
 
   @override
   num call(Map<String, num> variables) =>
-      _twoParameterFunctionMap[symbol](left(variables), right(variables));
+      _twoParameterFunctionMap[symbol]!(left(variables), right(variables));
 
   @override
-  String toTeX() => _twoParameterFunctionLatexRepresentation[symbol]
+  String toTeX() => _twoParameterFunctionLatexRepresentation[symbol]!
       .replaceAll('C1', left.toTeX())
       .replaceAll('C2', right.toTeX());
 }

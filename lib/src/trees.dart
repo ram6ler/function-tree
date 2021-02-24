@@ -26,21 +26,22 @@ abstract class FunctionTree {
 /// multivariable numerical function.
 ///
 class MultiVariableFunction extends FunctionTree {
-  MultiVariableFunction({String fromExpression, List<String> withVariables}) {
+  MultiVariableFunction(
+      {required String fromExpression, required List<String> withVariables}) {
     tree = _parseString(_cleanExpression(fromExpression), withVariables);
     _variablesToMap = List<String>.from(withVariables);
   }
 
-  List<String> _variablesToMap;
+  late List<String> _variablesToMap;
 
-  _Node tree;
+  late _Node tree;
 
   @override
   String get tex => _cleanTeX(tree.toTeX());
 
   num call(Map<String, num> vs) => tree(Map<String, num>.fromIterable(
       vs.keys.where((key) => _variablesToMap.contains(key)),
-      value: (key) => vs[key]));
+      value: (key) => vs[key]!));
 
   @override
   String toString() => tree.toString();
@@ -50,12 +51,13 @@ class MultiVariableFunction extends FunctionTree {
 /// numerical function.
 ///
 class SingleVariableFunction extends FunctionTree {
-  SingleVariableFunction({String fromExpression, String withVariable = 'x'}) {
+  SingleVariableFunction(
+      {required String fromExpression, String withVariable = 'x'}) {
     tree = _parseString(_cleanExpression(fromExpression), [withVariable]);
     _variable = withVariable;
   }
-  _Node tree;
-  String _variable;
+  late _Node tree;
+  late String _variable;
 
   @override
   String get tex => _cleanTeX(tree.toTeX());

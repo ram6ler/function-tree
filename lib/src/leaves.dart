@@ -13,23 +13,23 @@ class _ConstantLeaf extends _Node {
 
 class _SpecialConstantLeaf extends _Node {
   _SpecialConstantLeaf(this.constant) {
-    value = _constantMap[constant];
+    value = _constantMap[constant]!;
   }
   String constant;
-  num value;
+  late num value;
 
   @override
   num call(Map<String, num> _) => value;
 
   @override
-  String toTeX() => _constantLatexRepresentation[constant];
+  String toTeX() => _constantLatexRepresentation[constant]!;
 }
 
 class _VariableLeaf extends _Node {
   _VariableLeaf(this.variable);
   String variable;
   @override
-  num call(Map<String, num> variables) => variables[variable];
+  num call(Map<String, num> variables) => variables[variable]!;
 
   @override
   String toTeX() => '$variable ';
