@@ -1,6 +1,6 @@
 part of function_tree;
 
-final _debug = true;
+final _debug = false;
 void _message(String message) {
   if (_debug) {
     print(message);

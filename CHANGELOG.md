@@ -1,5 +1,9 @@
 # Change log
 
+
+## 0.8.11
+
+- Oh dear! This time with debug mode off!
 ## 0.8.1
 
 - Fixed unary sign bug that treated expressions like -a+b as -(a+b). Wow!
