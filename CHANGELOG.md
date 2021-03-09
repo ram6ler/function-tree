@@ -1,5 +1,8 @@
 # Change log
 
+## 0.8.1
+
+- Fixed unary sign bug that treated expressions like -a+b as -(a+b). Wow!
 ## 0.8.0-dev.1
 
 - Added null safety!

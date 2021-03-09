@@ -1,7 +1,8 @@
 part of function_tree;
 
+final _filth = RegExp(r'[^0-9a-zA-Z_.+\-/*%^(),]');
 String _cleanExpression(String expression) {
-  return expression.replaceAll(RegExp(r'[^0-9a-zA-Z_.+\-/*%^(),]'), '');
+  return expression.replaceAll(_filth, '');
 }
 
 String _cleanTeX(String expression) {

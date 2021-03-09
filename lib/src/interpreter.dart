@@ -1,6 +1,6 @@
 part of function_tree;
 
-final _debug = false;
+final _debug = true;
 void _message(String message) {
   if (_debug) {
     print(message);
@@ -86,18 +86,6 @@ _Node _parseString(String expression, List<String> variables) {
     }
   }
 
-  // Check if unary -.
-  if (expression[0] == '-') {
-    _message('  ...Negative Branch -: $expression');
-    return _NegativeBranch(_parseString(expression.substring(1), variables));
-  }
-
-  // Check if unary +.
-  if (expression[0] == '+') {
-    _message('  ...Positive Branch +: $expression');
-    return _PositiveBranch(_parseString(expression.substring(1), variables));
-  }
-
   // Check if parentheses.
   if (expression[0] == '(') {
     final end = _indexOfClosingParenthesis(expression);
@@ -152,6 +140,7 @@ _Node _parseString(String expression, List<String> variables) {
       for (var i = split.length - 1; i > 0; i--) {
         final left = split.sublist(0, i).join(operation),
             right = split.sublist(i).join(operation);
+        if (left.isEmpty) return null;
         if (_parenthesesAreBalanced(left) && _parenthesesAreBalanced(right)) {
           return [left, right];
         }
@@ -229,6 +218,18 @@ _Node _parseString(String expression, List<String> variables) {
     if (powerCheck != null) {
       return powerCheck;
     }
+  }
+
+  // Check if unary -.
+  if (expression[0] == '-') {
+    _message('  ...Negative Branch -: $expression');
+    return _NegativeBranch(_parseString(expression.substring(1), variables));
+  }
+
+  // Check if unary +.
+  if (expression[0] == '+') {
+    _message('  ...Positive Branch +: $expression');
+    return _PositiveBranch(_parseString(expression.substring(1), variables));
   }
 
   throw Exception('Bad expression: \'$expression\'...');
