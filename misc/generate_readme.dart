@@ -65,7 +65,7 @@ Future<void> main() async {
     for (final a in values) {
       final sb = StringBuffer();
       for (final b in values) {
-        sb..write(times({'a': a, 'b': b}))..write('\t');
+        sb..write(times({'a': a, 'b': b}).floor())..write('\t');
       }
       print(sb);
     }

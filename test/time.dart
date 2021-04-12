@@ -30,7 +30,7 @@ void main() {
   for (var i = 0; i < 1e5; i++) {
     g(5);
   }
-  ;
+
   stopwatch.stop();
   final functionTree = stopwatch.elapsedMilliseconds;
 

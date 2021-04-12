@@ -26,8 +26,8 @@
 ## Output:
 
 ```text
-'2 + 2' -> 4
-'(3 + 2)^3' -> 125
+'2 + 2' -> 4.0
+'(3 + 2)^3' -> 125.0
 '3 * pi / 4' -> 2.356194490192345
 '3 * sin(5 * pi / 6)' -> 1.5000000000000009
 'e^(-1)' -> 0.36787944117144233
@@ -119,7 +119,7 @@
   for (final a in values) {
     final sb = StringBuffer();
     for (final b in values) {
-      sb..write(times({'a': a, 'b': b}))..write('\t');
+      sb..write(times({'a': a, 'b': b}).floor())..write('\t');
     }
     print(sb);
   }

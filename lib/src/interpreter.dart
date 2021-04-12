@@ -59,7 +59,7 @@ _Node _parseString(String expression, List<String> variables) {
 
   // Check if numerical constant.
   {
-    final x = num.tryParse(expression);
+    final x = double.tryParse(expression);
     if (x != null) {
       _message('  ...Constant Leaf: $expression');
       return _ConstantLeaf(x);
