@@ -1,5 +1,9 @@
 # Change log
 
+## 0.8.13
+
+- Allow unary + or - to directly follow the *, /, ^ or % operators.
+
 ## 0.8.12
 
 - Parse numbers as `double`s instead of `num`s to prevents common use case issues with large integers.
