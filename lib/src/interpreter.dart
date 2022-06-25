@@ -134,18 +134,19 @@ _Node _parseString(String expression, List<String> variables) {
   }
 
   // Helper for binary operations implementation.
-  List<String>? _leftRight(String operation) {
+  List<String>? _leftRight(String operation, String notPreceding) {
     if (expression.contains(operation)) {
       final split = expression.split(operation);
       for (var i = split.length - 1; i > 0; i--) {
         final left = split.sublist(0, i).join(operation),
             right = split.sublist(i).join(operation);
-        if (left.isEmpty) return null;
+        if (left.isEmpty || notPreceding.contains(left[left.length - 1])) {
+          return null;
+        }
         if (_parenthesesAreBalanced(left) && _parenthesesAreBalanced(right)) {
           return [left, right];
         }
       }
-
       return null;
     } else {
       return null;
@@ -154,8 +155,9 @@ _Node _parseString(String expression, List<String> variables) {
 
   // Helper for binary operation definition.
   _Node? _binaryOperationCheck(String character, String nodeName,
-      _Node Function(_Node left, _Node right) generator) {
-    final leftRight = _leftRight(character);
+      _Node Function(_Node left, _Node right) generator,
+      [String notPreceding = '']) {
+    final leftRight = _leftRight(character, notPreceding);
     if (leftRight == null) {
       return null;
     }
@@ -169,7 +171,7 @@ _Node _parseString(String expression, List<String> variables) {
   // Check if +.
   {
     final sumCheck = _binaryOperationCheck(
-        '+', 'Sum Fork', (left, right) => _SumFork(left, right));
+        '+', 'Sum Fork', (left, right) => _SumFork(left, right), '/*^%');
     if (sumCheck != null) {
       return sumCheck;
     }
@@ -177,8 +179,8 @@ _Node _parseString(String expression, List<String> variables) {
 
   // Check if -.
   {
-    final diffCheck = _binaryOperationCheck(
-        '-', 'Difference Fork', (left, right) => _DifferenceFork(left, right));
+    final diffCheck = _binaryOperationCheck('-', 'Difference Fork',
+        (left, right) => _DifferenceFork(left, right), '/*^%');
     if (diffCheck != null) {
       return diffCheck;
     }
