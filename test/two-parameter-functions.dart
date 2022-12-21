@@ -12,4 +12,7 @@ void main() {
 
   final h = 'nrt(3, 27)'.interpret();
   print(h);
+
+  final i = 'nrt(3, -3)'.interpret();
+  print(i);
 }
