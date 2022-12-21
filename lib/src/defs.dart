@@ -3,7 +3,7 @@ part of function_tree;
 /// A mapping of string representations to two-parameter functions.
 final Map<String, num Function(num, num)> _twoParameterFunctionMap = {
   'log': (num b, num x) => log(x) / log(b),
-  'nrt': (num n, num x) => pow(x, 1 / n),
+  'nrt': (num n, num x) => (x.isNegative && n.toInt().isOdd ? -1:1)* pow(n.toInt().isOdd ? x.abs() : x, 1 / n),
   'pow': (num x, num p) => pow(x, p)
 };
 
