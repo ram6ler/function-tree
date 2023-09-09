@@ -1,5 +1,14 @@
 # Change log
 
+## 0.9.0
+
+- Incorporated Dart 3 features.
+- More resilient to repeated negation / confirmation.
+- Added a representation method on trees to show structure.
+- Added a `toString` representation of nodes and function trees.
+- Cleaned up the code base to be easier to read and to better match the dart.dev recommendations.
+- Interpreter shakes out some unnecessary components, such as parentheses surrounding constants, while generating tree.
+
 ## 0.8.13
 
 - Allow unary + or - to directly follow the *, /, ^ or % operators.
@@ -11,9 +20,11 @@
 ## 0.8.11
 
 - Oh dear! This time with debug mode off!
+
 ## 0.8.1
 
 - Fixed unary sign bug that treated expressions like -a+b as -(a+b). Wow!
+
 ## 0.8.0-dev.1
 
 - Added null safety!
@@ -35,7 +46,7 @@
 
 ## 0.2.6
 
-Fixed ambiguity issue: if the user chooses a variable name in an expression that happens to be a special constant name (such as 'e'), the parser will take occurrences in the expression to mean that the variable. 
+Fixed ambiguity issue: if the user chooses a variable name in an expression that happens to be a special constant name (such as 'e'), the parser will take occurrences in the expression to mean that the variable.
 
 ## 0.2.5
 

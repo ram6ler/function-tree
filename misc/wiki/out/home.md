@@ -1,8 +1,8 @@
 ![](logo.png)
 
-# function-tree
+# Function Tree
 
-[Home](home.md) | [Single variable functions](svf.md) | [Multi-variable functions](mvf.md) | [About](about.md) 
+[Home](home.md) | [Single variable functions](svf.md) | [Multi-Variable functions](mvf.md) | [About](about.md) 
 
 
 ## Home
@@ -23,8 +23,8 @@ print('2+2'.interpret());
 ```
 
 
-```
-4
+```text
+4.0
 
 ```
 
@@ -37,7 +37,7 @@ print('e^sin(pi / 3)'.interpret());
 ```
 
 
-```
+```text
 2.3774426752361646
 
 ```
@@ -54,7 +54,7 @@ for (var x = -4.0; x < 6.0; x += 0.5) {
 ```
 
 
-```
+```text
 |                                         *
 |                                  *
 |                            *
@@ -89,7 +89,7 @@ print(f(3));
 ```
 
 
-```
+```text
 1.5210503339560446
 
 ```
@@ -116,7 +116,7 @@ for (final y in values) {
 ```
 
 
-```
+```text
 1	2	3	4	5	
 2	4	6	8	10	
 3	6	9	12	15	
@@ -135,7 +135,7 @@ print(f({'x': 2, 'y': 3}));
 ```
 
 
-```
+```text
 4.546769238959674
 
 ```

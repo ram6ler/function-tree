@@ -1,7 +1,7 @@
 import "package:function_tree/function_tree.dart";
 
 void main() {
-  final expression = "(sqrt(x^2+x*y+y^2)*(log(2, ((abs(x)) + 2))))/(((1.5)))",
+  final expression = "sqrt(x^2 + x*y + y^2) * log(2, abs(x) + 2) / 1.5",
       f = expression.toMultiVariableFunction(["x", "y"]),
       width = 30,
       from = -3,
@@ -16,9 +16,6 @@ void main() {
             _ => " "
           };
 
-  print(expression);
-  print(f);
-  print(f.representation);
   print([
     for (var y = 0; y < width; y++)
       [

@@ -9,9 +9,6 @@ void main() {
       max = 2,
       spaces = (num y) => ((y - min) / (max - min) * width).round();
 
-  print("f: toString: $f\nTree\n----\n${f.representation}\n");
-  print("g: toString: $g\nTree\n----\n${g.representation}\n");
-
   for (var x = 0.0; x < 2 * pi; x += 0.2) {
     final chs = [for (var _ = 0; _ <= width; _++) " "];
     chs[spaces(f(x))] = "+";

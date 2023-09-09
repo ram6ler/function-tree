@@ -1,8 +1,8 @@
 ![](logo.png)
 
-# function-tree
+# Function Tree
 
-[Home](home.md) | [Single variable functions](svf.md) | [Multi-variable functions](mvf.md) | [About](about.md) 
+[Home](home.md) | [Single variable functions](svf.md) | [Multi-Variable functions](mvf.md) | [About](about.md) 
 
 
 ## Single variable functions
@@ -16,7 +16,7 @@ print(f(3));
 ```
 
 
-```
+```text
 30.202985987333292
 
 ```
@@ -25,13 +25,16 @@ print(f(3));
 By default, `'x'` is taken to be the variable; if this is not what we want, we can state the name of the variable:
 
 ```dart
-final f = SingleVariableFunction(fromExpression: '3 * cosh(a)', withVariable: 'a');
+final f = SingleVariableFunction(
+  fromExpression: '3 * cosh(a)', 
+  withVariable: 'a'
+);
 print(f(3));
 
 ```
 
 
-```
+```text
 30.202985987333292
 
 ```
@@ -46,8 +49,8 @@ print(f(100));
 ```
 
 
-```
-300
+```text
+300.0
 
 ```
 

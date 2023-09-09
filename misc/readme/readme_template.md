@@ -19,16 +19,6 @@ final expressions = [
 for (final expression in expressions) {
   print("'$expression' -> ${expression.interpret()}");
 }
-
-```
-
-```text
-'2 + 2' -> 4.0
-'(3 + 2)^3' -> 125.0
-'3 * pi / 4' -> 2.356194490192345
-'3 * sin(5 * pi / 6)' -> 1.5000000000000009
-'e^(-1)' -> 0.36787944117144233
-
 ```
 
 ## Function Trees
@@ -48,51 +38,6 @@ final f = "20 * (sin(x) + 1)".toSingleVariableFunction(),
 for (var x = 0.0; x < 2 * pi; x += pi / 20) {
   print("|" + " " * f(x).round() + "*");
 }
-
-```
-
-```text
-|                    *
-|                       *
-|                          *
-|                             *
-|                                *
-|                                  *
-|                                    *
-|                                      *
-|                                       *
-|                                        *
-|                                        *
-|                                        *
-|                                       *
-|                                      *
-|                                    *
-|                                  *
-|                                *
-|                             *
-|                          *
-|                       *
-|                    *
-|                 *
-|              *
-|           *
-|        *
-|      *
-|    *
-|  *
-| *
-|*
-|*
-|*
-| *
-|  *
-|    *
-|      *
-|        *
-|           *
-|              *
-|                 *
-
 ```
 
 ### Multi-variable functions
@@ -113,16 +58,6 @@ for (final a in values) {
   }
   print(sb);
 }
-
-```
-
-```text
-1 2 3 4 5 
-2 4 6 8 10 
-3 6 9 12 15 
-4 8 12 16 20 
-5 10 15 20 25 
-
 ```
 
 ## TeX expressions
@@ -132,12 +67,6 @@ Function tree instances have a `tex` property for TeX expressions:
 ```dart
 final f = "x * cos(y) + y * sin(x)".toMultiVariableFunction(["x", "y"]);
 print(f.tex);
-
-```
-
-```text
-x cdot \cos\left( y \right) + y cdot \sin\left( x \right)
-
 ```
 
 ## Interpreter

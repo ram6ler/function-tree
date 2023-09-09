@@ -1,67 +1,123 @@
-part of function_tree;
-
-final _filth = RegExp(r'[^0-9a-zA-Z_.+\-/*%^(),]');
-String _cleanExpression(String expression) {
-  return expression.replaceAll(_filth, '');
-}
-
-String _cleanTeX(String expression) {
-  final patternStart = r'\left( \left(', patternEnd = r'\right) \right)';
-  while (expression.contains(patternStart)) {
-    final start = expression.indexOf(patternStart),
-        end = _indexOfClosingParenthesis(
-            expression, start, patternStart, patternEnd);
-    expression = expression
-        .replaceFirst(patternStart, r'\left(       ', start)
-        .replaceFirst(patternEnd, r'\right)        ', end);
-  }
-  return expression.replaceAll(RegExp(' +'), ' ').trim();
-}
+import "base.dart" show Node;
+import "interpreter.dart" show parseString;
+import "helpers.dart" show cleanExpression, cleanTeX;
 
 /// Parent for `SingleVariableFunction` and `MultiVariableFunction` classes.
 abstract class FunctionTree {
+  /// A TeX expression representing the tree.
   String get tex;
+
+  /// A tree structure representation.
+  String get representation;
+
+  /// A callable tree representing the components of the function.
+  Node get tree;
 }
 
 /// A callable class built from a string representation of a
-/// multivariable numerical function.
+/// multi-variable numerical function.
 ///
+/// Two named arguments are required: `fromExpression` and `withVariables`.
+///
+/// **Example**
+///
+/// ```dart
+/// import "package:function_tree/function_tree.dart";
+///
+/// void main() {
+///   final expression = "x * cos(3 * y) + z",
+///       f = MultiVariableFunction(
+///         fromExpression: expression,
+///         withVariables: ["x", "y", "z"],
+///       ),
+///       pi = "pi".interpret(),
+///       x = 2.0,
+///       y = pi / 4,
+///       z = 0.5,
+///       result = f({"x": x, "y": y, "z": z});
+///   print("f($x, $y, $z) = $result");
+/// }
+/// ```
+///
+/// **Result**
+///
+/// ```text
+/// f(2.0, 0.7853981633974483, 0.5) = -0.9142135623730949
+/// ```
+///
+
 class MultiVariableFunction extends FunctionTree {
   MultiVariableFunction(
-      {required String fromExpression, required List<String> withVariables}) {
-    tree = _parseString(_cleanExpression(fromExpression), withVariables);
-    _variablesToMap = List<String>.from(withVariables);
-  }
+      {required String fromExpression, required List<String> withVariables})
+      : _tree = parseString(cleanExpression(fromExpression), withVariables),
+        _variablesToMap = List<String>.from(withVariables);
 
-  late List<String> _variablesToMap;
+  final List<String> _variablesToMap;
 
-  late _Node tree;
+  final Node _tree;
+  Node get tree => _tree;
 
-  @override
-  String get tex => _cleanTeX(tree.toTeX());
-
-  num call(Map<String, num> vs) => tree(Map<String, num>.fromIterable(
-      vs.keys.where((key) => _variablesToMap.contains(key)),
-      value: (key) => vs[key]!));
+  num call(Map<String, num> variables) => _tree(Map<String, num>.fromIterable(
+      variables.keys.where((key) => _variablesToMap.contains(key)),
+      value: (key) => variables[key]!));
 
   @override
-  String toString() => tree.toString();
+  String get tex => cleanTeX(_tree.toTeX());
+
+  @override
+  String get representation => _tree.representation();
+
+  @override
+  String toString() => _tree.toString();
 }
 
 /// A callable class built from a string representation of a
 /// numerical function.
 ///
+/// Two named arguments are required: `fromExpression` and `withVariable`.
+///
+/// **Example**
+///
+/// ```dart
+/// import "package:function_tree/function_tree.dart";
+///
+/// void main() {
+///   final expression = "a^2 + 3*a + 5",
+///       f = SingleVariableFunction(
+///         fromExpression: expression,
+///         withVariable: "a",
+///       ),
+///       x = 2.0,
+///       result = f(x);
+///   print("f($x) = $result");
+/// }
+/// ```
+///
+/// **Result**
+///
+/// ```text
+/// f(2.0) = 15.0
+/// ```
+///
 class SingleVariableFunction extends FunctionTree {
   SingleVariableFunction(
-      {required String fromExpression, String withVariable = 'x'}) {
-    tree = _parseString(_cleanExpression(fromExpression), [withVariable]);
-    _variable = withVariable;
-  }
-  late _Node tree;
-  late String _variable;
+      {required String fromExpression, String withVariable = "x"})
+      : _tree = parseString(cleanExpression(fromExpression), [withVariable]),
+        variable = withVariable;
+
+  final Node _tree;
+  Node get tree => _tree;
+
+  String variable;
+
+  num call(num x) => _tree({variable: x});
 
   @override
-  String get tex => _cleanTeX(tree.toTeX());
+  String get tex => cleanTeX(_tree.toTeX());
 
-  num call(num x) => tree({_variable: x});
+  @override
+  String get representation => _tree.representation();
+
+  @override
+  String toString() => _tree.toString();
 }

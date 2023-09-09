@@ -10,7 +10,10 @@ print(f(3));
 By default, `'x'` is taken to be the variable; if this is not what we want, we can state the name of the variable:
 
 ```dart
-final f = SingleVariableFunction(fromExpression: '3 * cosh(a)', withVariable: 'a');
+final f = SingleVariableFunction(
+  fromExpression: '3 * cosh(a)', 
+  withVariable: 'a'
+);
 print(f(3));
 ```
 

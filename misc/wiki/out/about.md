@@ -1,8 +1,8 @@
 ![](logo.png)
 
-# function-tree
+# Function Tree
 
-[Home](home.md) | [Single variable functions](svf.md) | [Multi-variable functions](mvf.md) | [About](about.md) 
+[Home](home.md) | [Single variable functions](svf.md) | [Multi-Variable functions](mvf.md) | [About](about.md) 
 
 
 ## About

@@ -1,140 +1,123 @@
-part of function_tree;
+import "base.dart" show Node;
+import "branches.dart"
+    show ParenthesisBranch, FunctionBranch, NegationBranch, AffirmationBranch;
+import "forks.dart"
+    show
+        DifferenceFork,
+        PowerFork,
+        ProductFork,
+        QuotientFork,
+        ModulusFork,
+        SumFork,
+        TwoParameterFunctionFork;
+import "leaves.dart" show Leaf, ConstantLeaf, SpecialConstantLeaf, VariableLeaf;
+import "helpers.dart"
+    show indexOfClosingParenthesis, numberOfCommas, parenthesesAreBalanced;
+import "defs.dart" as defs;
 
-final _debug = false;
-void _message(String message) {
-  if (_debug) {
-    print(message);
-  }
-}
-
-/// Returns the index of the closure of the parenthesis opening at `start`.
-int _indexOfClosingParenthesis(String expression,
-    [int start = 0, String open = '(', String close = ')']) {
-  int level = 0, index;
-  for (index = start; index < expression.length; index++) {
-    if (expression.substring(index, index + open.length) == open) {
-      level++;
-      index += open.length - 1;
-    } else if (expression.substring(index, index + close.length) == close) {
-      level--;
-      if (level == 0) {
-        break;
-      }
-      index += close.length - 1;
-    }
-  }
-  return level == 0 ? index : -1;
-}
-
-/// Checks whether all parentheses in `expression` are closed.
-bool _parenthesesAreBalanced(String expression) {
-  var level = 0;
-  for (var i = 0; i < expression.length; i++) {
-    if (expression[i] == '(') {
-      level++;
-    } else if (expression[i] == ')') {
-      level--;
-    }
-  }
-  return level == 0;
-}
-
-int _numberOfCommas(String expression) {
-  if (expression.isEmpty) {
-    return 0;
-  }
-
-  final index = expression.indexOf(',');
-  if (index == -1) {
-    return 0;
-  }
-  if (index == expression.length - 1) {
-    return 1;
-  }
-  return 1 + _numberOfCommas(expression.substring(index + 1));
-}
-
-_Node _parseString(String expression, List<String> variables) {
-  _message('Parsing "$expression"');
-
+/// Generates a callable function tree from `expression`.
+Node parseString(String expression, List<String> variables) {
   // Check if numerical constant.
   {
     final x = double.tryParse(expression);
     if (x != null) {
-      _message('  ...Constant Leaf: $expression');
-      return _ConstantLeaf(x);
+      return ConstantLeaf(x);
     }
   }
 
   // Check if a special constant.
-  {
-    // Allow user to override special constants.
-    if (_constantMap.containsKey(expression) &&
-        !variables.contains(expression)) {
-      _message('  ... Special Constant Leaf: $expression');
-      return _SpecialConstantLeaf(expression);
-    }
+  // (Allow user to override special constants.)
+  if (defs.constantMap.containsKey(expression) &&
+      !variables.contains(expression)) {
+    return SpecialConstantLeaf(expression);
   }
 
   // Check if a variable.
-  {
-    for (final variable in variables) {
-      if (variable == expression) {
-        _message('  ...Variable Leaf: $expression');
-        return _VariableLeaf(variable);
-      }
+  for (final variable in variables) {
+    if (variable == expression) {
+      return VariableLeaf(variable);
     }
   }
 
   // Check if parentheses.
-  if (expression[0] == '(') {
-    final end = _indexOfClosingParenthesis(expression);
+  if (expression[0] == "(") {
+    final end = indexOfClosingParenthesis(expression);
     if (end == expression.length - 1) {
-      _message('  ...Parenthesis Branch: $expression');
-      return _ParenthesisBranch(
-          _parseString(expression.substring(1, end), variables));
+      final childExpression = expression.substring(1, end),
+          peekAhead = parseString(childExpression, variables);
+      switch (peekAhead) {
+        case ParenthesisBranch() ||
+              Leaf() ||
+              FunctionBranch() ||
+              TwoParameterFunctionFork() ||
+              ProductFork() ||
+              QuotientFork() ||
+              ModulusFork() ||
+              PowerFork():
+          // Drop the outer parenthesis.
+          return peekAhead;
+        case _:
+          return ParenthesisBranch(peekAhead);
+      }
     }
   }
 
+  // Check if special negation.
+  if (expression[0] == "~") {
+    return NegationBranch(parseString(expression.substring(1), variables));
+  }
+
   // Check if a two-parameter function.
-  for (final key in _twoParameterFunctionMap.keys) {
+  for (final key in defs.twoParameterFunctionMap.keys) {
     final argumentIndex = key.length;
     if (expression.length >= argumentIndex &&
         expression.substring(0, argumentIndex) == key &&
-        _numberOfCommas(expression) == 1) {
-      final commaIndex = expression.indexOf(','),
-          end = _indexOfClosingParenthesis(expression, argumentIndex),
+        numberOfCommas(expression) == 1) {
+      final commaIndex = expression.indexOf(","),
+          end = indexOfClosingParenthesis(expression, argumentIndex),
           firstArgument = expression.substring(argumentIndex + 1, commaIndex),
           secondArgument =
               expression.substring(commaIndex + 1, expression.length - 1);
       if (end == expression.length - 1) {
-        _message('  ...Two Parameter Function Fork: $expression');
-        return _TwoParameterFunctionFork(
-            key,
-            _parseString(firstArgument, variables),
-            _parseString(secondArgument, variables));
+        final leftPeekAhead = parseString(firstArgument, variables),
+            leftChild = switch (leftPeekAhead) {
+              ParenthesisBranch() => leftPeekAhead.child,
+              _ => leftPeekAhead
+            },
+            rightPeekAhead = parseString(secondArgument, variables),
+            rightChild = switch (rightPeekAhead) {
+              ParenthesisBranch() => rightPeekAhead.child,
+              _ => rightPeekAhead
+            };
+        return TwoParameterFunctionFork(key, leftChild, rightChild);
       }
     }
   }
 
   // Check if a single-parameter function.
-  for (final key in _oneParameterFunctionMap.keys) {
+  for (final key in defs.oneParameterFunctionMap.keys) {
     final argumentIndex = key.length;
     if (expression.length >= argumentIndex &&
         expression.substring(0, argumentIndex) == key) {
-      if (expression[argumentIndex] == '(') {
-        final end = _indexOfClosingParenthesis(expression, argumentIndex);
+      if (expression[argumentIndex] == "(") {
+        final end = indexOfClosingParenthesis(expression, argumentIndex);
         if (end == expression.length - 1) {
-          _message('  ...Function Branch: $expression');
-          return _FunctionBranch(key,
-              _parseString(expression.substring(argumentIndex), variables));
+          final childExpression = expression.substring(argumentIndex),
+              peekAhead = parseString(childExpression, variables);
+          switch (peekAhead) {
+            case ParenthesisBranch():
+              // Drop parentheses containing full argument argument.
+              return FunctionBranch(key, peekAhead.child);
+            case _:
+              return FunctionBranch(key, peekAhead);
+          }
         }
       }
     }
   }
 
   // Helper for binary operations implementation.
-  List<String>? _leftRight(String operation, String notPreceding) {
+  (String, String)? leftRight(String operation, String notPreceding) {
     if (expression.contains(operation)) {
       final split = expression.split(operation);
       for (var i = split.length - 1; i > 0; i--) {
@@ -143,8 +126,8 @@ _Node _parseString(String expression, List<String> variables) {
         if (left.isEmpty || notPreceding.contains(left[left.length - 1])) {
           return null;
         }
-        if (_parenthesesAreBalanced(left) && _parenthesesAreBalanced(right)) {
-          return [left, right];
+        if (parenthesesAreBalanced(left) && parenthesesAreBalanced(right)) {
+          return (left, right);
         }
       }
       return null;
@@ -154,85 +137,97 @@ _Node _parseString(String expression, List<String> variables) {
   }
 
   // Helper for binary operation definition.
-  _Node? _binaryOperationCheck(String character, String nodeName,
-      _Node Function(_Node left, _Node right) generator,
-      [String notPreceding = '']) {
-    final leftRight = _leftRight(character, notPreceding);
-    if (leftRight == null) {
+  Node? binaryOperation(
+      String character,
+      String nodeName,
+      Node Function(
+        Node left,
+        Node right,
+      ) generator,
+      [String notPreceding = ""]) {
+    final operands = leftRight(character, notPreceding);
+    if (operands == null) {
       return null;
     }
 
-    _message(
-        '  ...$nodeName: $expression; left: ${leftRight.first}, right:${leftRight.last}');
-    return generator(_parseString(leftRight[0], variables),
-        _parseString(leftRight[1], variables));
+    final (String left, String right) = operands;
+    return generator(
+        parseString(left, variables), parseString(right, variables));
   }
 
   // Check if +.
   {
-    final sumCheck = _binaryOperationCheck(
-        '+', 'Sum Fork', (left, right) => _SumFork(left, right), '/*^%');
-    if (sumCheck != null) {
-      return sumCheck;
+    final sum = binaryOperation(
+        "+", "Sum Fork", (left, right) => SumFork(left, right), "/*^%");
+    if (sum != null) {
+      return sum;
     }
   }
 
   // Check if -.
   {
-    final diffCheck = _binaryOperationCheck('-', 'Difference Fork',
-        (left, right) => _DifferenceFork(left, right), '/*^%');
-    if (diffCheck != null) {
-      return diffCheck;
+    final difference = binaryOperation("-", "Difference Fork",
+        (left, right) => DifferenceFork(left, right), "/*^%");
+    if (difference != null) {
+      return difference;
     }
   }
 
   // Check if *.
   {
-    final productCheck = _binaryOperationCheck(
-        '*', 'Product Fork', (left, right) => _ProductFork(left, right));
-    if (productCheck != null) {
-      return productCheck;
+    final product = binaryOperation(
+        "*", "Product Fork", (left, right) => ProductFork(left, right));
+    if (product != null) {
+      return product;
     }
   }
 
   // Check if /.
   {
-    final quotientCheck = _binaryOperationCheck(
-        '/', 'Quotient Fork', (left, right) => _QuotientFork(left, right));
-    if (quotientCheck != null) {
-      return quotientCheck;
+    final quotient = binaryOperation(
+        "/", "Quotient Fork", (left, right) => QuotientFork(left, right));
+    if (quotient != null) {
+      return quotient;
     }
   }
 
   // Check if %.
   {
-    final remainderCheck = _binaryOperationCheck(
-        '%', 'Remainder Fork', (left, right) => _RemainderFork(left, right));
-    if (remainderCheck != null) {
-      return remainderCheck;
+    final modulus = binaryOperation(
+        "%", "Modulus Fork", (left, right) => ModulusFork(left, right));
+    if (modulus != null) {
+      return modulus;
     }
   }
 
   // Check if ^.
   {
-    final powerCheck = _binaryOperationCheck(
-        '^', 'Power Fork', (left, right) => _PowerFork(left, right));
-    if (powerCheck != null) {
-      return powerCheck;
+    final power = binaryOperation(
+        "^", "Power Fork", (left, right) => PowerFork(left, right));
+    if (power != null) {
+      return power;
     }
   }
 
-  // Check if unary -.
-  if (expression[0] == '-') {
-    _message('  ...Negative Branch -: $expression');
-    return _NegativeBranch(_parseString(expression.substring(1), variables));
+  if (expression[0] == "-") {
+    final childExpression = expression.substring(1),
+        peekAhead = parseString(childExpression, variables);
+    switch (peekAhead) {
+      case NegationBranch():
+        // Drop double negations.
+        return peekAhead.child;
+      case ConstantLeaf(value: num v):
+        // Replace negations of constants with negative constants.
+        return ConstantLeaf(-v);
+      case _:
+        return NegationBranch(peekAhead);
+    }
   }
 
   // Check if unary +.
-  if (expression[0] == '+') {
-    _message('  ...Positive Branch +: $expression');
-    return _PositiveBranch(_parseString(expression.substring(1), variables));
+  if (expression[0] == "+") {
+    return AffirmationBranch(parseString(expression.substring(1), variables));
   }
 
-  throw Exception('Bad expression: \'$expression\'...');
+  throw FormatException("Bad expression: \"$expression\"...");
 }
