@@ -2,7 +2,7 @@
 
 ## 0.9.1
 
-- Added the ability to create symbolic derivatives from single variable functions.
+- Added the ability to create symbolic derivatives from single variable functions where they are well defined. Early versions had numeric differentiation (and integration), but these were removed in later versions as not being part of the focused use case. (I'm not sure whether symbolic derivatives will stay either — they're still experimental.) These can be accessed through the methods `SingleVariableFunction.derivative` and `MultiVariableFunction.partial`. The resulting trees are often unnecessarily large for now; tree pruning to come if the trees are to stay!
 
 ## 0.9.0
 

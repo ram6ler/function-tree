@@ -1,0 +1,5 @@
+import "package:function_tree/function_tree.dart";
+
+main() async {
+  {BODY}
+}
