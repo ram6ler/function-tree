@@ -5,6 +5,9 @@ abstract class Leaf extends Node {}
 
 /// A node representing a numeric constant.
 class ConstantLeaf extends Leaf {
+  static final ConstantLeaf zero = ConstantLeaf(0.0);
+  static final ConstantLeaf one = ConstantLeaf(1.0);
+
   ConstantLeaf(this.value);
   final num value;
 
@@ -16,6 +19,9 @@ class ConstantLeaf extends Leaf {
 
   @override
   String representation([int indent = 0]) => "Constant $value";
+
+  @override
+  Node derivative(String _) => ConstantLeaf.zero;
 
   @override
   String toString() => value.toString();
@@ -38,6 +44,9 @@ class SpecialConstantLeaf extends Leaf {
   String representation([int indent = 0]) => "Special Constant $constant";
 
   @override
+  Node derivative(String _) => ConstantLeaf.zero;
+
+  @override
   String toString() => constant;
 }
 
@@ -55,6 +64,10 @@ class VariableLeaf extends Leaf {
 
   @override
   String representation([int indent = 0]) => "Variable $variable";
+
+  @override
+  Node derivative(String variableName) =>
+      variableName == variable ? ConstantLeaf.one : ConstantLeaf.zero;
 
   @override
   String toString() => variable;

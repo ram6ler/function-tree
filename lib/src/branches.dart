@@ -1,5 +1,6 @@
 import "base.dart" show Node;
 import "defs.dart" as defs;
+import "derivatives.dart" show derivativesMap;
 
 /// Base class for nodes with a single child node.
 abstract class Branch extends Node {
@@ -31,6 +32,14 @@ class FunctionBranch extends Branch {
   }
 
   @override
+  Node derivative(String variableName) {
+    if (derivativesMap.containsKey(name)) {
+      return derivativesMap[name]!(this, variableName);
+    }
+    throw UnimplementedError("Derivative of $name not implemented.");
+  }
+
+  @override
   String toString() => "$name($child)";
 }
 
@@ -51,6 +60,10 @@ class ParenthesisBranch extends Branch {
     final tab = " " * indent;
     return "Parentheses:\n$tab  ${child.representation(indent + 2)}";
   }
+
+  @override
+  Node derivative(String variableName) =>
+      ParenthesisBranch(child.derivative(variableName));
 
   @override
   String toString() => "($child)";
@@ -75,6 +88,10 @@ class NegationBranch extends Branch {
   }
 
   @override
+  Node derivative(String variableName) =>
+      NegationBranch(child.derivative(variableName));
+
+  @override
   String toString() => "-$child";
 }
 
@@ -95,6 +112,9 @@ class AffirmationBranch extends Branch {
     final tab = " " * indent;
     return "Affirmation:\n$tab  ${child.representation(indent + 2)}";
   }
+
+  @override
+  Node derivative(String variableName) => child.derivative(variableName);
 
   @override
   String toString() => "+$child";

@@ -2,9 +2,9 @@ import "dart:math";
 
 /// A mapping of string representations to two-parameter functions.
 final Map<String, num Function(num, num)> twoParameterFunctionMap = {
-  "log": (num b, num x) => log(x) / log(b),
-  "nrt": (num n, num x) => pow(x, 1 / n),
-  "pow": (num x, num p) => pow(x, p)
+  "log": (b, x) => log(x) / log(b),
+  "nrt": (n, x) => pow(x, 1 / n),
+  "pow": (x, p) => pow(x, p)
 };
 
 /// A mapping of string representations of functions to LaTeX.
@@ -16,32 +16,32 @@ final Map<String, String> twoParameterFunctionLatexRepresentation = {
 
 /// A mapping of string representations to functions.
 final Map<String, num Function(num)> oneParameterFunctionMap = {
-  "abs": (num x) => x.abs(),
+  "abs": (x) => x.abs(),
   "acos": acos,
   "asin": asin,
   "atan": atan,
-  "ceil": (num x) => x.ceil(),
+  "ceil": (x) => x.ceil(),
   "cos": cos,
-  "cosh": (num x) => (pow(e, x) + pow(e, -x)) / 2,
-  "cot": (num x) => 1 / tan(x),
-  "coth": (num x) => (pow(e, x) + pow(e, -x)) / (pow(e, x) - pow(e, -x)),
-  "csc": (num x) => 1 / sin(x),
-  "csch": (num x) => 2 / (pow(e, x) - pow(e, -x)),
+  "cosh": (x) => (pow(e, x) + pow(e, -x)) / 2,
+  "cot": (x) => 1 / tan(x),
+  "coth": (x) => (pow(e, x) + pow(e, -x)) / (pow(e, x) - pow(e, -x)),
+  "csc": (x) => 1 / sin(x),
+  "csch": (x) => 2 / (pow(e, x) - pow(e, -x)),
   "exp": exp,
-  "fact": (num x) => x.toInt() == x && x >= 0
+  "fact": (x) => x.toInt() == x && x >= 0
       ? [for (var i = 1; i <= x; i++) i].fold<double>(1.0, (a, b) => a * b)
       : throw (ArgumentError.value("Factorial expects non negative integer.")),
-  "floor": (num x) => x.floor(),
+  "floor": (x) => x.floor(),
   "ln": log,
   "log": log,
-  "round": (num x) => x.round(),
-  "sec": (num x) => 1 / cos(x),
-  "sech": (num x) => 2 / (pow(e, x) + pow(e, -x)),
+  "round": (x) => x.round(),
+  "sec": (x) => 1 / cos(x),
+  "sech": (x) => 2 / (pow(e, x) + pow(e, -x)),
   "sin": sin,
-  "sinh": (num x) => (pow(e, x) - pow(e, -x)) / 2,
+  "sinh": (x) => (pow(e, x) - pow(e, -x)) / 2,
   "sqrt": sqrt,
   "tan": tan,
-  "tanh": (num x) => (pow(e, x) - pow(e, -x)) / (pow(e, x) + pow(e, -x))
+  "tanh": (x) => (pow(e, x) - pow(e, -x)) / (pow(e, x) + pow(e, -x))
 };
 
 /// A mapping of string representations of functions to LaTeX.

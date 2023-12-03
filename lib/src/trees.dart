@@ -105,6 +105,11 @@ class SingleVariableFunction extends FunctionTree {
       : _tree = parseString(cleanExpression(fromExpression), [withVariable]),
         variable = withVariable;
 
+  SingleVariableFunction.fromNode(
+      {required Node node, String withVariable = "x"})
+      : _tree = node,
+        variable = withVariable;
+
   final Node _tree;
   Node get tree => _tree;
 
@@ -117,6 +122,12 @@ class SingleVariableFunction extends FunctionTree {
 
   @override
   String get representation => _tree.representation();
+
+  SingleVariableFunction derivative(String variableName) =>
+      SingleVariableFunction.fromNode(
+        node: _tree.derivative(variableName),
+        withVariable: variable,
+      );
 
   @override
   String toString() => _tree.toString();

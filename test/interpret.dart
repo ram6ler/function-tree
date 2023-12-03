@@ -3,6 +3,7 @@ import "package:function_tree/function_tree.dart";
 void main() {
   final error = 1e-9;
   const {
+    "2 * (2 + 3)": 10.0,
     "-3+6": 3.0,
     "+3-6": -3.0,
     "-sin(2*pi)": 0.0,
