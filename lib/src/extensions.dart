@@ -9,7 +9,10 @@ extension FunctionTreeStringMethods on String {
   ///     print(sum({"a": 1, "b": 2})); // 3
   ///
   MultiVariableFunction toMultiVariableFunction(List<String> variableNames) =>
-      MultiVariableFunction(fromExpression: this, withVariables: variableNames);
+      MultiVariableFunction(
+        fromExpression: this,
+        withVariables: variableNames,
+      );
 
   /// Generates a callable single variable function-tree.
   ///
@@ -19,7 +22,10 @@ extension FunctionTreeStringMethods on String {
   ///     print(f(2)); // 14.778112197861299
   SingleVariableFunction toSingleVariableFunction(
           [String variableName = "x"]) =>
-      SingleVariableFunction(fromExpression: this, withVariable: variableName);
+      SingleVariableFunction(
+        fromExpression: this,
+        withVariable: variableName,
+      );
 
   /// Evaluates the string as a mathematical expression.
   ///
@@ -27,4 +33,11 @@ extension FunctionTreeStringMethods on String {
   ///
   ///     print("2 * pi".interpret()); // 6.283185307179586
   num interpret() => toSingleVariableFunction()(0);
+
+  SingleVariableFunction derivative([String variableName = "x"]) =>
+      this.toSingleVariableFunction(variableName).derivative(variableName);
+
+  MultiVariableFunction partial(
+          List<String> variableNames, String variableName) =>
+      this.toMultiVariableFunction(variableNames).partial(variableName);
 }

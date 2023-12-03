@@ -52,6 +52,11 @@ class MultiVariableFunction extends FunctionTree {
       : _tree = parseString(cleanExpression(fromExpression), withVariables),
         _variablesToMap = List<String>.from(withVariables);
 
+  MultiVariableFunction.fromNode(
+      {required Node node, required List<String> withVariables})
+      : _tree = node,
+        _variablesToMap = List<String>.from(withVariables);
+
   final List<String> _variablesToMap;
 
   final Node _tree;
@@ -66,6 +71,12 @@ class MultiVariableFunction extends FunctionTree {
 
   @override
   String get representation => _tree.representation();
+
+  MultiVariableFunction partial(String variableName) =>
+      MultiVariableFunction.fromNode(
+        node: _tree.derivative(variableName),
+        withVariables: _variablesToMap,
+      );
 
   @override
   String toString() => _tree.toString();

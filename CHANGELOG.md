@@ -1,5 +1,9 @@
 # Change log
 
+## 0.9.1
+
+- Added the ability to create symbolic derivatives from single variable functions.
+
 ## 0.9.0
 
 - Incorporated Dart 3 features.
