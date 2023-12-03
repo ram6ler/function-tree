@@ -28,6 +28,9 @@ final Map<String, num Function(num)> oneParameterFunctionMap = {
   "csc": (num x) => 1 / sin(x),
   "csch": (num x) => 2 / (pow(e, x) - pow(e, -x)),
   "exp": exp,
+  "fact": (num x) => x.toInt() == x && x >= 0
+      ? [for (var i = 1; i <= x; i++) i].fold<double>(1.0, (a, b) => a * b)
+      : throw (ArgumentError.value("Factorial expects non negative integer.")),
   "floor": (num x) => x.floor(),
   "ln": log,
   "log": log,

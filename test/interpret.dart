@@ -30,6 +30,8 @@ void main() {
     "-(-25) + (26 - 29 * -(32)) / (-62 * ((((5 + -73)))) / -17)":
         21.153225806451612,
     "2+(-2)": 0,
+    "fact(5)": 120,
+    "2 * 5!": 240,
   }.forEach((expression, expected) {
     final _ = 0,
         f = expression.toSingleVariableFunction(),
@@ -45,4 +47,7 @@ void main() {
     print(okay ? "Okay!" : "Fail...");
     print("-" * 50);
   });
+
+  print("3 * 5!".interpret());
+  print("0!".interpret());
 }
