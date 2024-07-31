@@ -118,7 +118,7 @@ class QuotientFork extends Fork {
           right: right,
           label: "Quotient",
           generateTeX: (left, right) =>
-              "\frac{${left.toTeX()}}{${right.toTeX()}}",
+              "\\frac{${left.toTeX()}}{${right.toTeX()}}",
           generateString: (left, right) => "($left) / ($right)",
           definition: (a, b) => a / b,
         );
