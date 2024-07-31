@@ -2,7 +2,7 @@
 
 ## 0.9.2
 
-- Bring back missing backslashes in the TeX representations \cdot and \bmod.
+- Bring back missing backslashes in the TeX representations \frac, \cdot and \bmod.
 
 ## 0.9.1
 
