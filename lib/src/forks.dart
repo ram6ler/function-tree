@@ -98,7 +98,7 @@ class ProductFork extends Fork {
           right: right,
           label: "Product",
           generateTeX: (left, right) =>
-              "${left.toTeX()} \cdot ${right.toTeX()}",
+              "${left.toTeX()} \\cdot ${right.toTeX()}",
           generateString: (left, right) => "$left * $right",
           definition: (a, b) => a * b,
         );
@@ -118,7 +118,7 @@ class QuotientFork extends Fork {
           right: right,
           label: "Quotient",
           generateTeX: (left, right) =>
-              "\frac{${left.toTeX()}}{${right.toTeX()}}",
+              "\\frac{${left.toTeX()}}{${right.toTeX()}}",
           generateString: (left, right) => "($left) / ($right)",
           definition: (a, b) => a / b,
         );
@@ -140,7 +140,7 @@ class ModulusFork extends Fork {
           right: right,
           label: "Modulus",
           generateTeX: (left, right) =>
-              "${left.toTeX()} \bmod ${right.toTeX()}",
+              "${left.toTeX()} \\bmod ${right.toTeX()}",
           generateString: (left, right) => "$left % $right",
           definition: (a, b) => a % b,
         );

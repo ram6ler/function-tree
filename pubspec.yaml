@@ -1,6 +1,6 @@
 name: function_tree
 description: A simple library for parsing strings into callable function-trees.
-version: 0.9.1
+version: 0.9.2
 homepage: https://github.com/ram6ler/function-tree
 
 environment:
