@@ -250,7 +250,7 @@ void main() {
 
   testCases.forEach((expression, expected) {
     final f = expression.toSingleVariableFunction(),
-        obtained = f.complexCall({}),
+        obtained = f.complexCall(Complex.zero),
         okay = checkError(obtained, expected);
 
     print("Expression: $expression");

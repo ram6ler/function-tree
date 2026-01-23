@@ -134,8 +134,7 @@ class SingleVariableFunction extends FunctionTree {
 
   num call(num x) => _tree({variable: x});
 
-  Complex complexCall(Map<String, Complex> variables) =>
-      _tree.complexCall(variables);
+  Complex complexCall(Complex z) => _tree.complexCall({variable: z});
 
   @override
   String get tex => cleanTeX(_tree.toTeX());
