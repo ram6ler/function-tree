@@ -1,6 +1,10 @@
+import 'package:function_tree/src/complex.dart';
+
 /// Base class for tree nodes.
 abstract class Node {
   num call(Map<String, num> variableValues);
+
+  Complex complexCall(Map<String, Complex> variableValues);
 
   Node derivative(String variableName);
 

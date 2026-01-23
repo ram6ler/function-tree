@@ -10,7 +10,8 @@ import "forks.dart"
         ModulusFork,
         SumFork,
         TwoParameterFunctionFork;
-import "leaves.dart" show Leaf, ConstantLeaf, SpecialConstantLeaf, VariableLeaf;
+import "leaves.dart"
+    show ConstantLeaf, ImaginaryLeaf, Leaf, SpecialConstantLeaf, VariableLeaf;
 import "helpers.dart"
     show indexOfClosingParenthesis, numberOfCommas, parenthesesAreBalanced;
 import "defs.dart" as defs;
@@ -23,6 +24,12 @@ Node parseString(String expression, List<String> variables) {
     if (x != null) {
       return ConstantLeaf(x);
     }
+  }
+
+  // Check if is imaginary unit.
+  if (expression == defs.imaginaryUnitName &&
+      !variables.contains(defs.imaginaryUnitName)) {
+    return ImaginaryLeaf();
   }
 
   // Check if a special constant.
