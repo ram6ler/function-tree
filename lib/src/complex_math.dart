@@ -2,12 +2,57 @@ import 'complex.dart';
 import 'dart:math' as math;
 
 class ComplexMath {
+  static Complex add(Complex a, Complex b) {
+    return Complex(a.real + b.real, a.imaginary + b.imaginary);
+  }
+
+  static Complex subtract(Complex a, Complex b) {
+    return Complex(a.real - b.real, a.imaginary - b.imaginary);
+  }
+
+  static Complex negate(Complex a) {
+    return Complex(-a.real, -a.imaginary);
+  }
+
+  static Complex multiply(Complex a, Complex b) {
+    return Complex(a.real * b.real - a.imaginary * b.imaginary,
+        a.real * b.imaginary + a.imaginary * b.real);
+  }
+
+  static Complex divide(Complex a, Complex b) {
+    final denom = b.real * b.real + b.imaginary * b.imaginary;
+    return Complex(
+      (a.real * b.real + a.imaginary * b.imaginary) / denom,
+      (a.imaginary * b.real - a.real * b.imaginary) / denom,
+    );
+  }
+
+  static Complex modulo(Complex a, Complex b) {
+    final div = divide(a, b);
+    final roundedReal = div.real.roundToDouble();
+    final roundedImaginary = div.imaginary.roundToDouble();
+    final roundedDiv = Complex(roundedReal, roundedImaginary);
+    return subtract(a, multiply(roundedDiv, b));
+  }
+
+  static Complex ceil(Complex c) {
+    return Complex(c.real.ceilToDouble(), c.imaginary.ceilToDouble());
+  }
+
+  static Complex floor(Complex c) {
+    return Complex(c.real.floorToDouble(), c.imaginary.floorToDouble());
+  }
+
+  static Complex round(Complex c) {
+    return Complex(c.real.roundToDouble(), c.imaginary.roundToDouble());
+  }
+
   static Complex logBase(Complex base, Complex x) {
-    return log(x) / log(base);
+    return divide(log(x), log(base));
   }
 
   static Complex nrt(Complex n, Complex x) {
-    return pow(x, Complex(1, 0) / n);
+    return pow(x, divide(Complex(1, 0), n));
   }
 
   static Complex sqrt(Complex c) {
@@ -49,25 +94,27 @@ class ComplexMath {
   }
 
   static Complex tan(Complex c) {
-    return sin(c) / cos(c);
+    return divide(sin(c), cos(c));
   }
 
   static Complex acos(Complex c) {
     final i = Complex(0, 1);
     // acos(z) = π/2 - asin(z) is more numerically stable
     // Alternatively: acos(z) = -i * log(z + i*sqrt(1 - z²))
-    final sqrtPart = sqrt(Complex.one - c * c);
-    return -i * log(c + i * sqrtPart);
+    final sqrtPart = sqrt(subtract(Complex.one, multiply(c, c)));
+    return multiply(negate(i), log(add(c, multiply(i, sqrtPart))));
   }
 
   static Complex asin(Complex c) {
     final i = Complex(0, 1);
-    return -i * log(i * c + sqrt(Complex.one - c * c));
+    return multiply(negate(i),
+        log(add(multiply(i, c), sqrt(subtract(Complex.one, multiply(c, c))))));
   }
 
   static Complex atan(Complex c) {
     final i = Complex(0, 1);
-    return (i / Complex(2, 0)) * log((i + c) / (i - c));
+    return multiply(
+        divide(i, Complex(2, 0)), log(divide(add(i, c), subtract(i, c))));
   }
 
   static Complex exp(Complex c) {
@@ -77,31 +124,33 @@ class ComplexMath {
   }
 
   static Complex cosh(Complex c) {
-    return (pow(Complex.e, c) + pow(Complex.e, -c)) / Complex(2, 0);
+    return divide(
+        add(pow(Complex.e, c), pow(Complex.e, negate(c))), Complex(2, 0));
   }
 
   static Complex sinh(Complex c) {
-    return (pow(Complex.e, c) - pow(Complex.e, -c)) / Complex(2, 0);
+    return divide(
+        subtract(pow(Complex.e, c), pow(Complex.e, negate(c))), Complex(2, 0));
   }
 
   static Complex tanh(Complex c) {
-    return sinh(c) / cosh(c);
+    return divide(sinh(c), cosh(c));
   }
 
   static Complex cot(Complex c) {
-    return Complex.one / tan(c);
+    return divide(Complex.one, tan(c));
   }
 
   static Complex coth(Complex c) {
-    return cosh(c) / sinh(c);
+    return divide(cosh(c), sinh(c));
   }
 
   static Complex csc(Complex c) {
-    return Complex.one / sin(c);
+    return divide(Complex.one, sin(c));
   }
 
   static Complex csch(Complex c) {
-    return Complex.one / sinh(c);
+    return divide(Complex.one, sinh(c));
   }
 
   static Complex sec(Complex c) {
@@ -109,7 +158,8 @@ class ComplexMath {
   }
 
   static Complex sech(Complex c) {
-    return Complex(2, 0) / (pow(Complex.e, c) + pow(Complex.e, -c));
+    return divide(
+        Complex(2, 0), add(pow(Complex.e, c), pow(Complex.e, negate(c))));
   }
 
   // Helper methods for real hyperbolic functions
@@ -139,19 +189,27 @@ class ComplexMath {
 
     // Use reflection formula for Re(z) < 0.5
     if (z.real < 0.5) {
-      return Complex(math.pi, 0) /
-          (sin(Complex(math.pi, 0) * z) * gamma(Complex.one - z));
+      return divide(
+          Complex.pi,
+          multiply(
+              sin(multiply(Complex.pi, z)), gamma(subtract(Complex.one, z))));
     }
 
-    z = z - Complex.one;
+    z = subtract(z, Complex.one);
     Complex x = Complex(coefficients[0], 0);
     for (int i = 1; i < g + 2; i++) {
-      x = x + Complex(coefficients[i], 0) / (z + Complex(i.toDouble(), 0));
+      x = add(
+          x,
+          divide(
+              Complex(coefficients[i], 0), add(z, Complex(i.toDouble(), 0))));
     }
 
-    final t = z + Complex(g + 0.5, 0);
+    final t = add(z, Complex(g + 0.5, 0));
     final sqrtTwoPi = Complex(math.sqrt(2 * math.pi), 0);
-    return sqrtTwoPi * pow(t, z + Complex(0.5, 0)) * exp(-t) * x;
+    return multiply(
+        multiply(multiply(sqrtTwoPi, pow(t, add(z, Complex(0.5, 0)))),
+            exp(negate(t))),
+        x);
   }
 
   /// Factorial function for complex numbers
@@ -168,23 +226,11 @@ class ComplexMath {
       return Complex(result, 0);
     }
     // For other values, use gamma(z+1)
-    return gamma(c + Complex.one);
+    return gamma(add(c, Complex.one));
   }
 
   static Complex abs(Complex c) {
     return Complex(c.magnitude, 0);
-  }
-
-  static Complex ceil(Complex c) {
-    return c.ceil();
-  }
-
-  static Complex floor(Complex c) {
-    return c.floor();
-  }
-
-  static Complex round(Complex c) {
-    return c.round();
   }
 
   /// A mapping of string representations to two-parameter functions.

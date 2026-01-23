@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'complex_math.dart';
 
 class Complex {
   final double real;
@@ -7,6 +8,10 @@ class Complex {
 
   const Complex(this.real, this.imaginary);
 
+  Complex.polar(double magnitude, double phase)
+      : real = magnitude * math.cos(phase),
+        imaginary = magnitude * math.sin(phase);
+
   static const zero = Complex(0, 0);
 
   static const one = Complex(1, 0);
@@ -14,6 +19,8 @@ class Complex {
   static const e = Complex(math.e, 0);
 
   static const i = Complex(0, 1);
+
+  static const pi = Complex(math.pi, 0);
 
   double get magnitude => math.sqrt(real * real + imaginary * imaginary);
 
@@ -25,47 +32,29 @@ class Complex {
 
   bool get isReal => imaginary == 0;
 
-  Complex operator +(Complex other) {
-    return Complex(real + other.real, imaginary + other.imaginary);
+  Complex operator +(Complex other) => ComplexMath.add(this, other);
+
+  Complex operator -(Complex other) => ComplexMath.subtract(this, other);
+
+  Complex operator -() => ComplexMath.negate(this);
+
+  Complex operator *(Complex other) => ComplexMath.multiply(this, other);
+
+  Complex operator /(Complex other) => ComplexMath.divide(this, other);
+
+  Complex operator %(Complex other) => ComplexMath.modulo(this, other);
+
+  double operator [](int index) {
+    if (index == 0) return real;
+    if (index == 1) return imaginary;
+    throw RangeError.index(index, this, 'Index out of range: $index');
   }
 
-  Complex operator -(Complex other) =>
-      Complex(real - other.real, imaginary - other.imaginary);
+  Complex ceil() => ComplexMath.ceil(this);
 
-  Complex operator -() => Complex(-real, -imaginary);
+  Complex floor() => ComplexMath.floor(this);
 
-  Complex operator *(Complex other) {
-    return Complex(real * other.real - imaginary * other.imaginary,
-        real * other.imaginary + imaginary * other.real);
-  }
-
-  Complex operator /(Complex other) {
-    final denom = other.real * other.real + other.imaginary * other.imaginary;
-    return Complex(
-      (real * other.real + imaginary * other.imaginary) / denom,
-      (imaginary * other.real - real * other.imaginary) / denom,
-    );
-  }
-
-  Complex operator %(Complex other) {
-    final div = this / other;
-    final roundedReal = div.real.roundToDouble();
-    final roundedImaginary = div.imaginary.roundToDouble();
-    final roundedDiv = Complex(roundedReal, roundedImaginary);
-    return this - (roundedDiv * other);
-  }
-
-  Complex ceil() {
-    return Complex(real.ceilToDouble(), imaginary.ceilToDouble());
-  }
-
-  Complex floor() {
-    return Complex(real.floorToDouble(), imaginary.floorToDouble());
-  }
-
-  Complex round() {
-    return Complex(real.roundToDouble(), imaginary.roundToDouble());
-  }
+  Complex round() => ComplexMath.round(this);
 
   @override
   bool operator ==(Object other) {
