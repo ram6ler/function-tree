@@ -33,6 +33,18 @@ void main() {
     "2+(-2)": 0,
     "fact(5)": 120,
     "2 * 5!": 240,
+    // Unary negation must bind looser than ^: -x^n = -(x^n)
+    "-2^2": -4.0,
+    "-2^3": -8.0,
+    "-3^2": -9.0,
+    "-10^2": -100.0,
+    "1 + -2^2": -3.0,
+    "exp(-1^2)": 0.36787944117144233, // exp(-1), not exp(1)
+    // Edge cases around ^ precedence
+    "(-2)^2": 4.0,      // explicit parens around base: (-2)^2 = 4, not -4
+    "2^-2": 0.25,       // negative exponent on the right still works
+    "-2^2 + 2^2": 0.0,  // negation in compound expression: -(4) + 4 = 0
+    "+2^2": 4.0,        // unary + also binds looser than ^
   }.forEach((expression, expected) {
     final _ = 0,
         f = expression.toSingleVariableFunction(),
