@@ -1,4 +1,5 @@
 import "base.dart" show Node;
+import "complex.dart";
 import "interpreter.dart" show parseString;
 import "helpers.dart" show cleanExpression, cleanTeX;
 
@@ -66,6 +67,11 @@ class MultiVariableFunction extends FunctionTree {
       variables.keys.where((key) => _variablesToMap.contains(key)),
       value: (key) => variables[key]!));
 
+  Complex complexCall(Map<String, Complex> variables) =>
+      _tree.complexCall(Map<String, Complex>.fromIterable(
+          variables.keys.where((key) => _variablesToMap.contains(key)),
+          value: (key) => variables[key]!));
+
   @override
   String get tex => cleanTeX(_tree.toTeX());
 
@@ -127,6 +133,8 @@ class SingleVariableFunction extends FunctionTree {
   String variable;
 
   num call(num x) => _tree({variable: x});
+
+  Complex complexCall(Complex z) => _tree.complexCall({variable: z});
 
   @override
   String get tex => cleanTeX(_tree.toTeX());

@@ -1,4 +1,5 @@
 import "base.dart" show Node;
+import "complex.dart";
 import "defs.dart" as defs;
 
 abstract class Leaf extends Node {}
@@ -13,6 +14,8 @@ class ConstantLeaf extends Leaf {
 
   @override
   num call(Map<String, num> _) => value;
+
+  Complex complexCall(Map<String, Complex> _) => Complex(value.toDouble(), 0);
 
   @override
   String toTeX() => "$value ";
@@ -38,6 +41,9 @@ class SpecialConstantLeaf extends Leaf {
   num call(Map<String, num> _) => value;
 
   @override
+  Complex complexCall(Map<String, Complex> _) => Complex(value.toDouble(), 0);
+
+  @override
   String toTeX() => defs.constantLatexRepresentation[constant]!;
 
   @override
@@ -60,6 +66,9 @@ class VariableLeaf extends Leaf {
   num call(Map<String, num> variables) => variables[variable]!;
 
   @override
+  Complex complexCall(Map<String, Complex> variables) => variables[variable]!;
+
+  @override
   String toTeX() => "$variable ";
 
   @override
@@ -71,4 +80,30 @@ class VariableLeaf extends Leaf {
 
   @override
   String toString() => variable;
+}
+
+class ImaginaryLeaf extends Leaf {
+  ImaginaryLeaf() : value = Complex.i;
+
+  final String constant = "i";
+  final Complex value;
+
+  @override
+  num call(Map<String, num> _) => throw UnimplementedError(
+      'ImaginaryLeaf cannot be evaluated to a real number.');
+
+  @override
+  Complex complexCall(Map<String, Complex> _) => value;
+
+  @override
+  String toTeX() => defs.constantLatexRepresentation[constant]!;
+
+  @override
+  String representation([int indent = 0]) => "Imaginary Unit";
+
+  @override
+  Node derivative(String _) => ConstantLeaf.zero;
+
+  @override
+  String toString() => constant;
 }
