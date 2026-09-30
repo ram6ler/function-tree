@@ -1,3 +1,5 @@
+Please note: this project has been archived in favor of a rewrite called [dendrocas](https://github.com/ram6ler/dendrocas).
+
 # Function Tree
 
 Welcome to `function_tree`, a simple library for parsing strings into
