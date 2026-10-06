@@ -10,7 +10,8 @@ import "forks.dart"
         ModulusFork,
         SumFork,
         TwoParameterFunctionFork;
-import "leaves.dart" show Leaf, ConstantLeaf, SpecialConstantLeaf, VariableLeaf;
+import "leaves.dart"
+    show ConstantLeaf, ImaginaryLeaf, Leaf, SpecialConstantLeaf, VariableLeaf;
 import "helpers.dart"
     show indexOfClosingParenthesis, numberOfCommas, parenthesesAreBalanced;
 import "defs.dart" as defs;
@@ -23,6 +24,12 @@ Node parseString(String expression, List<String> variables) {
     if (x != null) {
       return ConstantLeaf(x);
     }
+  }
+
+  // Check if is imaginary unit.
+  if (expression == defs.imaginaryUnitName &&
+      !variables.contains(defs.imaginaryUnitName)) {
+    return ImaginaryLeaf();
   }
 
   // Check if a special constant.
@@ -117,7 +124,8 @@ Node parseString(String expression, List<String> variables) {
   }
 
   // Helper for binary operations implementation.
-  (String, String)? leftRight(String operation, String notPreceding) {
+  (String, String)? leftRight(String operation, String notPreceding,
+      [String notStarting = ""]) {
     if (expression.contains(operation)) {
       final split = expression.split(operation);
       for (var i = split.length - 1; i > 0; i--) {
@@ -125,6 +133,9 @@ Node parseString(String expression, List<String> variables) {
             right = split.sublist(i).join(operation);
         if (left.isEmpty || notPreceding.contains(left[left.length - 1])) {
           return null;
+        }
+        if (notStarting.isNotEmpty && notStarting.contains(left[0])) {
+          continue;
         }
         if (parenthesesAreBalanced(left) && parenthesesAreBalanced(right)) {
           return (left, right);
@@ -144,8 +155,9 @@ Node parseString(String expression, List<String> variables) {
         Node left,
         Node right,
       ) generator,
-      [String notPreceding = ""]) {
-    final operands = leftRight(character, notPreceding);
+      [String notPreceding = "",
+      String notStarting = ""]) {
+    final operands = leftRight(character, notPreceding, notStarting);
     if (operands == null) {
       return null;
     }
@@ -203,7 +215,7 @@ Node parseString(String expression, List<String> variables) {
   // Check if ^.
   {
     final power = binaryOperation(
-        "^", "Power Fork", (left, right) => PowerFork(left, right));
+        "^", "Power Fork", (left, right) => PowerFork(left, right), "", "-+");
     if (power != null) {
       return power;
     }

@@ -1,3 +1,5 @@
+import "package:function_tree/src/complex.dart";
+
 import "base.dart" show Node;
 import "defs.dart" as defs;
 import "derivatives.dart" show derivativesMap;
@@ -20,6 +22,10 @@ class FunctionBranch extends Branch {
   @override
   num call(Map<String, num> variables) =>
       defs.oneParameterFunctionMap[name]!(child(variables));
+
+  @override
+  Complex complexCall(Map<String, Complex> variables) =>
+      defs.complexOneParameterFunctionMap[name]!(child.complexCall(variables));
 
   @override
   String toTeX() => defs.oneParameterFunctionLatexRepresentation[name]!
@@ -53,6 +59,10 @@ class ParenthesisBranch extends Branch {
   num call(Map<String, num> variables) => child(variables);
 
   @override
+  Complex complexCall(Map<String, Complex> variables) =>
+      child.complexCall(variables);
+
+  @override
   String toTeX() => r"\left(C\right)".replaceAll("C", child.toTeX());
 
   @override
@@ -79,6 +89,10 @@ class NegationBranch extends Branch {
   num call(Map<String, num> variables) => -child(variables);
 
   @override
+  Complex complexCall(Map<String, Complex> variables) =>
+      -child.complexCall(variables);
+
+  @override
   String toTeX() => "-${child.toTeX()}";
 
   @override
@@ -103,6 +117,10 @@ class AffirmationBranch extends Branch {
 
   @override
   num call(Map<String, num> variables) => child(variables);
+
+  @override
+  Complex complexCall(Map<String, Complex> variables) =>
+      child.complexCall(variables);
 
   @override
   String toTeX() => "+${child.toTeX()}";

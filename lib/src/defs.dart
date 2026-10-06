@@ -1,11 +1,17 @@
 import "dart:math";
 
+import "complex.dart" show Complex;
+import "complex_math.dart";
+
 /// A mapping of string representations to two-parameter functions.
 final Map<String, num Function(num, num)> twoParameterFunctionMap = {
   "log": (b, x) => log(x) / log(b),
   "nrt": (n, x) => pow(x, 1 / n),
   "pow": (x, p) => pow(x, p)
 };
+
+final Map<String, Complex Function(Complex, Complex)>
+    complexTwoParameterFunctionMap = ComplexMath.twoParameterFunctionMap;
 
 /// A mapping of string representations of functions to LaTeX.
 final Map<String, String> twoParameterFunctionLatexRepresentation = {
@@ -44,6 +50,9 @@ final Map<String, num Function(num)> oneParameterFunctionMap = {
   "tanh": (x) => (pow(e, x) - pow(e, -x)) / (pow(e, x) + pow(e, -x))
 };
 
+final Map<String, Complex Function(Complex)> complexOneParameterFunctionMap =
+    ComplexMath.oneParameterFunctionMap;
+
 /// A mapping of string representations of functions to LaTeX.
 final Map<String, String> oneParameterFunctionLatexRepresentation = {
   "abs": r"\left| C \right| ",
@@ -70,6 +79,8 @@ final Map<String, String> oneParameterFunctionLatexRepresentation = {
   "tan": r"\tan\left( C \right) ",
   "tanh": r"\tanh\left( C \right) "
 };
+
+const imaginaryUnitName = "i";
 
 /// A mapping of string representations to constants.
 final Map<String, num> constantMap = {

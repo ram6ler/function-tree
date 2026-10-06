@@ -1,5 +1,7 @@
 import "dart:math";
 import "base.dart" show Node;
+import "complex.dart";
+import "complex_math.dart";
 import "defs.dart" as defs;
 import "constant_check.dart" show isConstant;
 import "leaves.dart" show ConstantLeaf;
@@ -22,6 +24,9 @@ abstract class Fork extends Node {
   /// Operator definition.
   final num Function(num, num) definition;
 
+  /// Complex Operator definition.
+  final Complex Function(Complex, Complex) complexDefinition;
+
   Fork({
     required this.left,
     required this.right,
@@ -29,11 +34,16 @@ abstract class Fork extends Node {
     required this.generateTeX,
     required this.generateString,
     required this.definition,
+    required this.complexDefinition,
   });
 
   @override
   num call(Map<String, num> variables) =>
       definition(left(variables), right(variables));
+
+  @override
+  Complex complexCall(Map<String, Complex> variables) => complexDefinition(
+      left.complexCall(variables), right.complexCall(variables));
 
   @override
   String toTeX() => generateTeX(left, right);
@@ -59,6 +69,7 @@ class SumFork extends Fork {
           generateTeX: (left, right) => "${left.toTeX()} + ${right.toTeX()}",
           generateString: (left, right) => "$left + $right",
           definition: (a, b) => a + b,
+          complexDefinition: (a, b) => a + b,
         );
 
   @override
@@ -79,6 +90,7 @@ class DifferenceFork extends Fork {
           generateTeX: (left, right) => "${left.toTeX()} - ${right.toTeX()}",
           generateString: (left, right) => "$left - $right",
           definition: (a, b) => a - b,
+          complexDefinition: (a, b) => a - b,
         );
 
   @override
@@ -101,6 +113,7 @@ class ProductFork extends Fork {
               "${left.toTeX()} \\cdot ${right.toTeX()}",
           generateString: (left, right) => "$left * $right",
           definition: (a, b) => a * b,
+          complexDefinition: (a, b) => a * b,
         );
 
   @override
@@ -121,6 +134,7 @@ class QuotientFork extends Fork {
               "\\frac{${left.toTeX()}}{${right.toTeX()}}",
           generateString: (left, right) => "($left) / ($right)",
           definition: (a, b) => a / b,
+          complexDefinition: (a, b) => a / b,
         );
   @override
   Node derivative(String variableName) => QuotientFork(
@@ -143,6 +157,7 @@ class ModulusFork extends Fork {
               "${left.toTeX()} \\bmod ${right.toTeX()}",
           generateString: (left, right) => "$left % $right",
           definition: (a, b) => a % b,
+          complexDefinition: (a, b) => a % b,
         );
 
   @override
@@ -161,6 +176,7 @@ class PowerFork extends Fork {
           generateTeX: (left, right) => "${left.toTeX()}^{${right.toTeX()}}",
           generateString: (left, right) => "$left ^ $right",
           definition: (a, b) => pow(a, b),
+          complexDefinition: (a, b) => ComplexMath.pow(a, b),
         );
 
   @override
@@ -204,15 +220,17 @@ class PowerFork extends Fork {
 class TwoParameterFunctionFork extends Fork {
   TwoParameterFunctionFork(this.name, Node left, Node right)
       : super(
-            left: left,
-            right: right,
-            label: name,
-            generateTeX: (left, right) => defs
-                .twoParameterFunctionLatexRepresentation[name]!
-                .replaceAll("C1", left.toTeX())
-                .replaceAll("C2", right.toTeX()),
-            generateString: (left, right) => "$name($left, $right)",
-            definition: defs.twoParameterFunctionMap[name]!);
+          left: left,
+          right: right,
+          label: name,
+          generateTeX: (left, right) => defs
+              .twoParameterFunctionLatexRepresentation[name]!
+              .replaceAll("C1", left.toTeX())
+              .replaceAll("C2", right.toTeX()),
+          generateString: (left, right) => "$name($left, $right)",
+          definition: defs.twoParameterFunctionMap[name]!,
+          complexDefinition: defs.complexTwoParameterFunctionMap[name]!,
+        );
 
   /// The name of the function.
   String name;
